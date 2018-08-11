@@ -434,6 +434,7 @@ namespace future {
         } else if (size == 1) {
             oldStack->push(newStack->top());
         }
+        delete newStack;
     }
     
     CSSParser::ASTNode* TreeTranverseCreateExpressionAction(std::stack<CSSParser::ASTNode *>* stack)
