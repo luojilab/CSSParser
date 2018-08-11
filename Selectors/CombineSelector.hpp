@@ -17,9 +17,18 @@
 namespace future {
     class CombineSelector: public Selector {
     public:
+        enum CombineType {
+            InstanceSibling,
+            NormalSibling,
+            InstanceInherical,
+            NormalInherical,
+            NoCombine
+        };
+    public:
         CombineSelector()
         {
             m_selectorType = Selector::CombineSelector;
+            m_combineType = NoCombine;
         }
         ~CombineSelector();
         void initialInstanceSiblingList(Selector* head, Selector* sibling);
@@ -55,6 +64,7 @@ namespace future {
         std::list<Selector *> m_normalSiblingList;
         std::list<Selector *> m_instanceInhericalList;
         std::list<Selector *> m_normalInhericalList;
+        CombineType m_combineType;
     };
 }
 

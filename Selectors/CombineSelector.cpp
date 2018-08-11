@@ -30,6 +30,9 @@ namespace future {
     
     void CombineSelector::initialNormalSiblingList(future::Selector *head, future::Selector *sibling)
     {
+        if (m_combineType != NoCombine) {
+            assert(0);
+        }
         if (!head || !sibling) {
             return;
         }
@@ -37,10 +40,14 @@ namespace future {
         m_normalSiblingList.clear();
         m_normalSiblingList.push_back(head);
         m_normalSiblingList.push_back(sibling);
+        m_combineType = NormalSibling;
     }
     
     void CombineSelector::initialInstanceSiblingList(future::Selector *head, future::Selector *sibling)
     {
+        if (m_combineType != NoCombine) {
+            assert(0);
+        }
         if (!head || !sibling) {
             return;
         }
@@ -48,10 +55,14 @@ namespace future {
         m_instanceSiblingList.clear();
         m_instanceSiblingList.push_back(head);
         m_instanceSiblingList.push_back(sibling);
+        m_combineType = InstanceSibling;
     }
     
     void CombineSelector::initialNormalInhericalList(future::Selector *root, future::Selector *child)
     {
+        if (m_combineType != NoCombine) {
+            assert(0);
+        }
         if (!root || !child) {
             return;
         }
@@ -59,10 +70,14 @@ namespace future {
         m_normalInhericalList.clear();
         m_normalInhericalList.push_back(root);
         m_normalInhericalList.push_back(child);
+        m_combineType = NormalInherical;
     }
     
     void CombineSelector::initialInstanceInhericalList(future::Selector *root, future::Selector *child)
     {
+        if (m_combineType != NoCombine) {
+            assert(0);
+        }
         if (!root || !child) {
             return;
         }
@@ -70,6 +85,7 @@ namespace future {
         m_instanceInhericalList.clear();
         m_instanceInhericalList.push_back(root);
         m_instanceInhericalList.push_back(child);
+        m_combineType = InstanceInherical;
     }
 
     bool CombineSelector::isBaseSelector()
