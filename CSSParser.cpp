@@ -326,6 +326,11 @@ namespace future {
                 continue;
             }
             if (!operatorStack.size()) {
+                if (newOperator->getSignType() == SignSelector::Comma) {
+                    atsCollection.push_back(operandStack.top());
+                    operandStack.pop();
+                    continue;
+                }
                 pushOperatedElement(operatorStack, s);
                 continue;
             }
