@@ -22,7 +22,8 @@ void tranversTree(GumboNode *root, future::Selector* selector)
             tranversTree(child, selector);
         }
         const char* name = HTMLTagNames[root->v.element.tag];
-        printf("%s match selector %d\n", name, future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&root, selector));
+        future::HTMLCSSRefAdaptor::GumboArray nodesArray = &root;
+        printf("%s match selector %d line: %d\n", name, future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector), root->v.element.start_pos.line);
     }
 }
 

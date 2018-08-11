@@ -174,5 +174,10 @@ namespace future {
     	} while (0);
     	return *after;
     }
+    
+    CombineSelector::CombineType CombineSelector::getCombineType()
+    {
+        return m_combineType;
+    }
 
 } // namespace future

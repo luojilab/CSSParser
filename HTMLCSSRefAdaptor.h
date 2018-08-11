@@ -14,19 +14,22 @@ namespace future {
 
 class HTMLCSSRefAdaptor {
 public:
+    typedef GumboNode*** GumboArrayPtr;
+    typedef GumboNode** GumboArray;
 	HTMLCSSRefAdaptor();
 	virtual ~HTMLCSSRefAdaptor();
-	static bool nodeAdaptToSelector(GumboNode** node, Selector* selector, int *potentialSize = 0);
+	static bool nodeAdaptToSelector(GumboArrayPtr node, Selector* selector, int *potentialSize = 0);
 
 private:
-	static bool nodeAdaptToIDSelector(GumboNode **node, IdSelector* selector);
-	static bool nodeAdaptToClassSelector(GumboNode **node, ClassSelector* selector);
-	static bool nodeAdaptToTypeSelector(GumboNode **node, TypeSelector* selector);
-	static bool nodeAdaptToAttributeSelector(GumboNode **node, AttributeSelector* selector);
-	static bool nodeAdaptToPseudoSelector(GumboNode **node, PseudoSelector* selector);
-	static bool nodeAdaptToSequenceSelector(GumboNode **node, SequenceSelector* selector);
-	static bool nodeAdaptToCombineSelector(GumboNode **node, CombineSelector* selector);
-	static bool nodeAdaptToGroupSelector(GumboNode **node, GroupSelector* selector);
+	static bool nodeAdaptToIDSelector(GumboArrayPtr node, IdSelector* selector, int *potentialSize);
+	static bool nodeAdaptToClassSelector(GumboArrayPtr node, ClassSelector* selector, int *potentialSize);
+	static bool nodeAdaptToTypeSelector(GumboArrayPtr node, TypeSelector* selector, int *potentialSize);
+	static bool nodeAdaptToAttributeSelector(GumboArrayPtr node, AttributeSelector* selector, int *potentialSize);
+	static bool nodeAdaptToPseudoSelector(GumboArrayPtr node, PseudoSelector* selector, int *potentialSize);
+	static bool nodeAdaptToSequenceSelector(GumboArrayPtr node, SequenceSelector* selector, int *potentialSize);
+	static bool nodeAdaptToCombineSelector(GumboArrayPtr node, CombineSelector* selector, int *potentialSize);
+	static bool nodeAdaptToGroupSelector(GumboArrayPtr node, GroupSelector* selector, int *potentialSize);
+    static void updateNextNodes(const std::list<GumboNode *>&, GumboArrayPtr arrayPtr, int *size);
 };
 
 }

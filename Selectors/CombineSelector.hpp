@@ -39,6 +39,7 @@ namespace future {
         int weight();
         Selector* getBefore();
         Selector* getAfter();
+        CombineType getCombineType();
         inline std::list<Selector *> getInstanceSiblingList()
 		{
         	return m_instanceSiblingList;
