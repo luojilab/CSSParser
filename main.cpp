@@ -38,8 +38,10 @@ int main(int argc, const char * argv[]) {
     fclose(f);
     
     GumboInterface gi(ptr, "2");
-    CSSParser::getParser()->parser("/Users/lmonster/Desktop/test.css");
-    std::list<Selector *>selectors = CSSParser::getParser()->getSelectors();
+    CSSParser* parser = new CSSParser;
+    parser->parse("/Users/lmonster/Desktop/test.css");
+    std::list<Selector *>selectors = parser->getSelectors();
+    delete parser;
     for (Selector *s : selectors) {
         tranversTree(gi.get_root_node(), s);
         printf("\n");

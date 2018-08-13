@@ -34,16 +34,15 @@ namespace future {
             }
         };
     public:
-        static CSSParser*           getParser();
-        bool                        parser(const std::string& cssFile);
+        CSSParser();
+        ~CSSParser();
+        bool                        parse(const std::string& cssFile);
         std::list<Selector *>       getSelectors();
         std::list<KeywordItem *>    getKeywords();
     private:
         typedef void(*treeTranverseAction)(ASTNode *);
         typedef CSSParser::ASTNode *(*treeTranverseWithUserDataAction)(std::stack<CSSParser::ASTNode *>* stack);
         friend CSSParser::ASTNode* TreeTranverseCreateExpressionAction(std::stack<CSSParser::ASTNode *>*);
-        CSSParser();
-        ~CSSParser();
         static void             initialASTNode(ASTNode *target, Selector* head, ASTNode* left, ASTNode* right);
         static void             pushOperatedElement(std::stack<ASTNode *>&, Selector* head);
         void                    clean();
@@ -51,7 +50,7 @@ namespace future {
         bool                    tokenHasInfo(CSSTokenType);
         bool                    topHaveSign(std::stack<Selector *>&);
         Selector*               getSelector(Lex::CSSToken* token);
-        std::list<ASTNode *>    createATS(std::stack<Selector *>);
+        std::list<ASTNode *>    createATS(std::stack<Selector *>&);
         void                    pushSign(std::stack<Selector *>&, SignSelector::SignType);
         void                    buildReversePolishNotation(std::stack<ASTNode*>& operatorStack, std::stack<ASTNode*>& operandStack);
         void                    RMLtranverseAST(ASTNode *root, treeTranverseAction action);

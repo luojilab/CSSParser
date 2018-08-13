@@ -7,6 +7,7 @@
 //
 
 #include "CSSLex.hpp"
+#include <string.h>
 
 #define NextChar(buffer) *(buffer + m_forwardPos++)
 #define ErrorInLoop STATUS = LexError;stopLoop = true;

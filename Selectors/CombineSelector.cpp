@@ -7,6 +7,7 @@
 //
 
 #include "CombineSelector.hpp"
+#include <assert.h>
 
 namespace future {
     

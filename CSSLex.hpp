@@ -19,7 +19,11 @@ namespace future {
     public:
         struct CSSToken {
             CSSTokenType type;
-            const char* data = 0;
+            const char* data;
+            CSSToken()
+            {
+            	data = 0;
+            }
             ~CSSToken()
             {
                 delete [] data;

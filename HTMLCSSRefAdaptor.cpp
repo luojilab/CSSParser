@@ -545,8 +545,8 @@ namespace future {
                     BackupNodes(beforeNodes, elementA, *potentialSize);
                     int innnerLoopSize = *potentialSize;
                     for (int j = 0; j < innnerLoopSize; j++) {
-                        parent = beforeNodes[i]->parent;
-                        c_idx = beforeNodes[i]->index_within_parent;
+                        parent = beforeNodes[j]->parent;
+                        c_idx = beforeNodes[j]->index_within_parent;
                         if (!parent || parent->type != GUMBO_NODE_ELEMENT) {
                             continue;
                         }
