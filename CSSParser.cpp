@@ -505,11 +505,11 @@ bool CSSParser::tokenHasInfo(CSSTokenType type) {
 }
 
 bool CSSParser::topHaveSign(std::stack<Selector *>& stack) {
-	if (!stack.size()) {
+	if (stack.empty()) {
 		return false;
 	}
 	Selector* topSelector = stack.top();
-	return dynamic_cast<SignSelector *> (topSelector);
+	return topSelector->getType() == Selector::SignSelector;
 }
 
 std::list<Selector *> CSSParser::getSelectors() {
@@ -558,6 +558,10 @@ void CSSParser::clean() {
 		delete *it;
 	}
 	m_tokenStack.clear();
+	if (m_lexer) {
+		m_lexer->CleanResource();
+		m_lexer = NULL;
+	}
 }
 
 static void cleanASTTree(CSSParser::ASTNode *node) {

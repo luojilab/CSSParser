@@ -45,6 +45,7 @@ namespace future {
         bool        isHexCharacter(char);
         bool        isWs(char);
         const char* copyData(CSSToken* from);
+        const char* createData(size_t start, size_t end);
     private:
         std::string             m_fileName;
         const char*             m_buffer;

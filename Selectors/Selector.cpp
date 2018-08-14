@@ -16,8 +16,7 @@ namespace future {
     
     Selector::~Selector()
     {
-        delete [] m_ruleData;
-        m_ruleData = 0;
+        m_ruleData = NULL;
     }
     
     std::string Selector::description()

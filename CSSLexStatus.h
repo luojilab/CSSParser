@@ -40,6 +40,7 @@ enum CSSDFAStatus {
     includes,
     star,
     colon,
+    semicolon,
     leftSqureBracket,
     rightSqureBracket,
     equal,
@@ -82,6 +83,7 @@ enum CSSTokenType {
     RIGHTSQUREBRACKET,
     EQUAL,
     ANNOTATION,
+    SYNTAXEND,
     END
 };
 #define IDENT_START_SIGN    '-'

@@ -57,6 +57,8 @@ namespace future {
         memset((void *)m_buffer, 0, bufferSize);
         m_bufferSize = fread((void *)m_buffer, 1, bufferSize, fileHandler);
         fclose(fileHandler);
+        m_firstPos = 0;
+        m_forwardPos = 0;
     }
     
     Lex::CSSToken* Lex::GetTextToken(char stringType)
@@ -77,7 +79,7 @@ namespace future {
             char c = NextChar(m_buffer);
             switch (status) {
                 case _START: {
-                    if ((c != '\r' && c != '\n' && c != '\f' && c != stringBoundary) || c & 0x80) {
+                    if ((c != '\r' && c != '\n' && c != '\f' && c != stringBoundary) || (c & 0x80)) {
                         status = _STRING;
                         break;
                     } else if (c == '\\') {
@@ -107,18 +109,12 @@ namespace future {
                     break;
                 }
                 case _STRING: {
-                    if ((c != '\r' && c != '\n' && c != '\f' && c != stringBoundary) || c & 0x80 || c == '\\') {
+                    if ((c != '\r' && c != '\n' && c != '\f' && c != stringBoundary) || (c & 0x80) || c == '\\') {
                         --m_forwardPos;
                         status = _START;
                     } else {
                         token->type = STRING;
-                        size_t size = m_forwardPos - m_firstPos + 1;
-                        if (size - 1) {
-                            char* data = new char[size];
-                            data[size - 1] = '\0';
-                            memcpy(data, m_buffer + m_firstPos, size - 1);
-                            token->data = data;
-                        }
+                        token->data = createData(m_firstPos, m_forwardPos);
                         return token;
                     }
                     break;
@@ -147,7 +143,7 @@ namespace future {
                 case Start: {
                     if (c == IDENT_START_SIGN) {
                         STATUS = iDentStart;
-                    } else if (isLetter(c) || c == UNDER_LINE_SIGN || c & 0x80) {
+                    } else if (isLetter(c) || c == UNDER_LINE_SIGN || (c & 0x80)) {
                         STATUS = NMStart;
                     } else if (c == BACK_SPLASH) {
                         STATUS = EscapeStartInNMStart;
@@ -164,7 +160,7 @@ namespace future {
                     break;
                 }
                 case iDentStart: {
-                    if (isLetter(c) || c == UNDER_LINE_SIGN || c & 0x80) {
+                    if (isLetter(c) || c == UNDER_LINE_SIGN || (c & 0x80)) {
                         STATUS = NMStart;
                     } else if (c == BACK_SPLASH) {
                         STATUS = EscapeStartInNMStart;
@@ -175,7 +171,7 @@ namespace future {
                     break;
                 }
                 case NMStart: {
-                    if (isLetter(c) || isDigitalCharacter(c) || c == UNDER_LINE_SIGN || c == IDENT_START_SIGN || c &0x80) {
+                    if (isLetter(c) || isDigitalCharacter(c) || c == UNDER_LINE_SIGN || c == IDENT_START_SIGN || (c &0x80)) {
                         STATUS = NMChar;
                     } else if (c == BACK_SPLASH) {
                         STATUS = EscapeStartInNMChar;
@@ -186,7 +182,7 @@ namespace future {
                     break;
                 }
                 case NMChar: {
-                    if (isLetter(c) || isDigitalCharacter(c) || c == UNDER_LINE_SIGN || c == IDENT_START_SIGN || c &0x80) {
+                    if (isLetter(c) || isDigitalCharacter(c) || c == UNDER_LINE_SIGN || c == IDENT_START_SIGN || (c &0x80)) {
                         STATUS = NMChar;
                     } else if (c == BACK_SPLASH) {
                         STATUS = EscapeStartInNMChar;
@@ -236,13 +232,7 @@ namespace future {
                 break;
             }
         }
-        size_t size = m_forwardPos - m_firstPos + 1;
-        if (size - 1) {
-            char *tokenData = new char[size];
-            tokenData[size - 1] = '\0';
-            memcpy(tokenData, (m_buffer + m_firstPos), size - 1);
-            token->data = tokenData;
-        }
+        token->data = createData(m_firstPos, m_forwardPos);
         if (STATUS == iDent) {
             token->type = IDENT;
         } else if (STATUS == end) {
@@ -404,6 +394,10 @@ namespace future {
                             }
                             break;
                         }
+                        case ';' : {
+                        	STATUS = semicolon;
+                        	break;
+                        }
                             
                         default: {
                         identLabel:
@@ -458,13 +452,7 @@ namespace future {
                             STATUS = blockEnd;
                         }
                     }
-                    size_t size = m_forwardPos - m_firstPos + 1;
-                    if (size - 1) {
-                        char *ptr = new char[size];
-                        ptr[size] = '\0';
-                        memcpy((void *)ptr, m_buffer + m_firstPos, size - 1);
-                        data = ptr;
-                    }
+                    data = createData(m_firstPos, m_forwardPos);
                     stopLoop = true;
                     break;
                 }
@@ -626,6 +614,11 @@ namespace future {
                     stopLoop = true;
                     break;
                 }
+                case semicolon: {
+                	token->type =SYNTAXEND;
+                	stopLoop = true;
+                	break;
+                }
                 case string1End: case string2End: {
                     token->type = STRING;
                     token->data = data;
@@ -659,10 +652,25 @@ namespace future {
         }
         char* ptr = new char[size + 1];
         ptr[size] = '\0';
-        memcpy(ptr, from->data, size);
+        memmove(ptr, from->data, size);
         return ptr;
     }
     
+    const char* Lex::createData(size_t start, size_t end)
+    {
+    	if (m_buffer == NULL || start > end) {
+    		return NULL;
+    	}
+    	size_t size = end - start + 1;
+    	if (m_bufferSize < end) {
+    		return NULL;
+    	}
+    	char* ptr = new char[size];
+    	ptr[size -1] = '\0';
+    	memmove(ptr, m_buffer + start, size - 1);
+    	return ptr;
+    }
+
     void Lex::CleanResource()
     {
         delete [] m_buffer;
