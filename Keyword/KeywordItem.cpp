@@ -12,12 +12,9 @@ namespace future {
     KeywordItem::KeywordItem(const std::string& name)
     {
         m_name = name;
-        m_data = NULL;
     }
     
     KeywordItem::~KeywordItem()
     {
-        delete [] m_data;
-        m_data = NULL;
     }
 }

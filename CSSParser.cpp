@@ -7,6 +7,7 @@
 //
 
 #include "CSSParser.hpp"
+#include "CSSLex.hpp"
 #include <string.h>
 #include <assert.h>
 
@@ -22,7 +23,7 @@ static void cleanASTTree(CSSParser::ASTNode *);
 #define PopOperator(node) ASTNode* node = operatorStack.top();\
                         operatorStack.pop();
 CSSParser::CSSParser() {
-	m_lexer = NULL;
+	m_lexer = new Lex;
 }
 
 CSSParser::~CSSParser() {
@@ -38,9 +39,6 @@ static void eraseStack(std::stack<T>& stack) {
 bool CSSParser::parse(const std::string &cssPath) {
 	if (cssPath.empty()) {
 		return false;
-	}
-	if (!m_lexer) {
-		m_lexer = Lex::GetLex();
 	}
 	m_selectors.clear();
 	m_lexer->SetBufferSource(cssPath);
@@ -160,7 +158,7 @@ Selector* CSSParser::getSelector(Lex::CSSToken* token) {
 	case DOT: {
 		Lex::CSSToken* t = m_lexer->GetToken();
 		if (t->type == IDENT) {
-			if (strlen(t->data)) {
+			if (!t->data.empty()) {
 				ClassSelector* s = new ClassSelector(t->data);
 				selector = s;
 			}
@@ -168,8 +166,8 @@ Selector* CSSParser::getSelector(Lex::CSSToken* token) {
 		break;
 	}
 	case HASH: {
-		if (strlen(token->data)) {
-			std::string id = token->data;
+		if (!token->data.empty()) {
+			std::string& id = token->data;
 			id = id.substr(1, id.length() - 1);
 			IdSelector* s = new IdSelector(id);
 			selector = s;
@@ -178,12 +176,14 @@ Selector* CSSParser::getSelector(Lex::CSSToken* token) {
 	}
 	case LEFTSQUREBRACKET: {
 		Lex::CSSToken* t = m_lexer->GetToken();
-		const char _start = 0;
-		const char _key = 1;
-		const char _sign = 2;
-		const char _value = 3;
-		const char _end = 4;
-		const char _error = 5;
+        enum {
+            _start = 0,
+            _key,
+            _sign,
+            _value,
+            _end,
+            _error
+        };
 		std::string key;
 		std::string value;
 		char _status = _start;
@@ -195,7 +195,7 @@ Selector* CSSParser::getSelector(Lex::CSSToken* token) {
 					_status = _start;
 				} else if (t->type == IDENT) {
 					_status = _key;
-					if (t->data) {
+					if (!t->data.empty()) {
 						key = t->data;
 					}
 				} else {
@@ -238,7 +238,7 @@ Selector* CSSParser::getSelector(Lex::CSSToken* token) {
 					_status = _sign;
 				} else if (t->type == IDENT || t->type == STRING) {
 					_status = _value;
-					if (!t->data) {
+					if (t->data.empty()) {
 						break;
 					}
 					value = t->data;

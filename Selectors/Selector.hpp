@@ -31,11 +31,11 @@ public:
 public:
 	Selector();
 	virtual ~Selector() = 0;
-	inline const char* getRuleData() {
+	inline std::string& getRuleData() {
 		return m_ruleData;
 	}
 
-	void setRuleData(const char *data) {
+	void setRuleData(const std::string& data) {
 		m_ruleData = data;
 	}
 
@@ -57,8 +57,8 @@ public:
 	virtual std::string description();
 protected:
 	std::string m_hostCSSFilePath;
+    std::string m_ruleData;
 	SelectorType m_selectorType;
-	const char* m_ruleData;
 };
 }
 

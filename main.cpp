@@ -46,5 +46,6 @@ int main(int argc, const char * argv[]) {
         tranversTree(gi.get_root_node(), s);
         printf("\n");
     }
+    delete [] ptr;
     return 0;
 }

@@ -11,12 +11,10 @@
 namespace future {
     Selector::Selector()
     {
-        m_ruleData = 0;
     }
     
     Selector::~Selector()
     {
-        m_ruleData = NULL;
     }
     
     std::string Selector::description()

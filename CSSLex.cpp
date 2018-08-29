@@ -24,14 +24,6 @@ namespace future {
     {
         CleanResource();
     }
-    Lex* Lex::GetLex()
-    {
-        static Lex* lexer = 0;
-        if (!lexer) {
-            lexer = new Lex;
-        }
-        return lexer;
-    }
     
     void Lex::SetBufferSource(const std::string fileName)
     {
@@ -63,9 +55,11 @@ namespace future {
     
     Lex::CSSToken* Lex::GetTextToken(char stringType)
     {
-        const char  _START = 0;
-        const char  _ESCAPESTART = 1;
-        const char  _STRING = 2;
+        enum {
+            _START = 0,
+            _ESCAPESTART,
+            _STRING
+        };
         char status = _START;
         CSSToken* token = new CSSToken;
         m_tokenCache.push_back(token);
@@ -251,7 +245,7 @@ namespace future {
         token->type = IDENT;
         m_firstPos = m_forwardPos;
         bool stopLoop = false;
-        const char* data = 0;
+        std::string data;
         static CSSDFAStatus STATUS;
         if (m_firstPos >= m_bufferSize || !m_buffer) {
             token->type = END;
@@ -267,7 +261,7 @@ namespace future {
                             stopLoop = true;
                             if (identToken->type == IDENT) {
                                 STATUS = AtKeyWord;
-                                data = copyData(identToken);
+                                data = identToken->data;
                             } else {
                                 STATUS = LexError;
                             }
@@ -278,7 +272,7 @@ namespace future {
                             stopLoop = true;
                             if (identToken->type == IDENT) {
                                 STATUS = Hash;
-                                data = copyData(identToken);
+                                data = identToken->data;
                             } else {
                                 STATUS = LexError;
                             }
@@ -405,7 +399,7 @@ namespace future {
                             CSSToken* idToken = GetIdentToken();
                             if (idToken->type == IDENT) {
                                 STATUS = iDent;
-                                data = copyData(idToken);
+                                data = idToken->data;
                             } else if (idToken->type == END) {
                                 STATUS = end;
                             } else {
@@ -460,7 +454,7 @@ namespace future {
                     CSSToken* stringToken = GetTextToken(1);
                     if (stringToken->type == STRING) {
                         STATUS = string1End;
-                        data = copyData(stringToken);
+                        data = stringToken->data;
                     } else {
                         STATUS = LexError;
                     }
@@ -470,7 +464,7 @@ namespace future {
                     CSSToken* stringToken = GetTextToken(2);
                     if (stringToken->type == STRING) {
                         STATUS = string2End;
-                        data = copyData(stringToken);
+                        data = stringToken->data;
                     } else {
                         STATUS = LexError;
                     }
@@ -499,7 +493,6 @@ namespace future {
                 }
                 case LexError: {
                     token->type = ERROR;
-                    token->data = 0;
                     break;
                 }
                 case Hash: {
@@ -509,12 +502,10 @@ namespace future {
                 }
                 case Ws: {
                     token->type = WS;
-                    token->data = 0;
                     break;
                 }
                 case include: {
                     token->type = INCLUDES;
-                    token->data = 0;
                     stopLoop = true;
                     break;
                 }
@@ -525,12 +516,10 @@ namespace future {
                 }
                 case dot: {
                     token->type = DOT;
-                    token->data = 0;
                     break;
                 }
                 case blockStart: {
                     token->type = BLOCKSTART;
-                    token->data = 0;
                     resetStatus = false;
                     break;
                 }
@@ -560,7 +549,6 @@ namespace future {
                 }
                 case greater: {
                     token->type = GREATER;
-                    token->data = 0;
                     stopLoop = true;
                     break;
                 }
@@ -627,7 +615,6 @@ namespace future {
                 }
                 case annotationEnd: {
                     token->type = ANNOTATION;
-                    token->data = 0;
                     stopLoop = true;
                     break;
                 }
@@ -644,19 +631,7 @@ namespace future {
         return token;
     }
     
-    const char* Lex::copyData(future::Lex::CSSToken *from)
-    {
-        size_t size = strlen(from->data);
-        if (!size) {
-            return 0;
-        }
-        char* ptr = new char[size + 1];
-        ptr[size] = '\0';
-        memmove(ptr, from->data, size);
-        return ptr;
-    }
-    
-    const char* Lex::createData(size_t start, size_t end)
+    std::string Lex::createData(size_t start, size_t end)
     {
     	if (m_buffer == NULL || start > end) {
     		return NULL;
@@ -668,7 +643,9 @@ namespace future {
     	char* ptr = new char[size];
     	ptr[size -1] = '\0';
     	memmove(ptr, m_buffer + start, size - 1);
-    	return ptr;
+        std::string ret = ptr;
+        delete [] ptr;
+    	return ret;
     }
 
     void Lex::CleanResource()

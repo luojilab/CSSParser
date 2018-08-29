@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <vector>
+#include <list>
 #include "CSSLexStatus.h"
 
 namespace future {
@@ -19,24 +19,20 @@ namespace future {
     public:
         struct CSSToken {
             CSSTokenType type;
-            const char* data;
+            std::string data;
             CSSToken()
             {
-            	data = 0;
             }
             ~CSSToken()
             {
-                delete [] data;
-                data = 0;
             }
         };
     public:
-        static Lex*     GetLex();
+        Lex();
         CSSToken*       GetToken();
         void            CleanResource();
         void            SetBufferSource(const std::string fileName);
     private:
-        Lex();
         ~Lex();
         CSSToken*   GetIdentToken();
         CSSToken*   GetTextToken(char stringType);
@@ -44,15 +40,14 @@ namespace future {
         bool        isLetter(char);
         bool        isHexCharacter(char);
         bool        isWs(char);
-        const char* copyData(CSSToken* from);
-        const char* createData(size_t start, size_t end);
+        std::string createData(size_t start, size_t end);
     private:
         std::string             m_fileName;
         const char*             m_buffer;
         size_t                  m_bufferSize;
         size_t                  m_firstPos;
         size_t                  m_forwardPos;
-        std::vector<CSSToken *> m_tokenCache;
+        std::list<CSSToken *>   m_tokenCache;
     };
 }
 #endif /* CSSLex_hpp */

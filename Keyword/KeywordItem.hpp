@@ -17,12 +17,12 @@ namespace future {
     public:
         KeywordItem(const std::string& name);
         ~KeywordItem();
-        void setData(const char* data)
+        void setData(const std::string& data)
         {
             m_data = data;
         };
         
-        const char* getData()
+        std::string& getData()
         {
             return m_data;
         }
@@ -33,7 +33,7 @@ namespace future {
         }
     private:
         std::string m_name;
-        const char* m_data;
+        std::string m_data;
     };
 }
 
