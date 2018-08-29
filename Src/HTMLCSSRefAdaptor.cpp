@@ -270,6 +270,7 @@ namespace future {
     
     static const char* CLASSATTRIBUTE = "class";
     static const char* IDATTRIBUTE = "id";
+    std::list<HTMLCSSRefAdaptor::GumboArray> SMemoryBackup;
     HTMLCSSRefAdaptor::HTMLCSSRefAdaptor()
     {
     }
@@ -726,7 +727,19 @@ namespace future {
             }
             *potentialSize = size;
             *nodeArrayPtr = potentialNodesArray;
+            SMemoryBackup.push_back(potentialNodesArray);
         }
+    }
+    
+    void HTMLCSSRefAdaptor::CleanResource()
+    {
+        SMemoryBackup.unique();
+        auto it = SMemoryBackup.begin();
+        auto end = SMemoryBackup.end();
+        while (it != end) {
+            delete [] *it++;
+        }
+        SMemoryBackup.clear();
     }
     
 }

@@ -19,6 +19,7 @@ public:
 	HTMLCSSRefAdaptor();
 	virtual ~HTMLCSSRefAdaptor();
 	static bool nodeAdaptToSelector(GumboArrayPtr node, Selector* selector, int *potentialSize = 0);
+    static void CleanResource();
 
 private:
 	static bool nodeAdaptToIDSelector(GumboArrayPtr node, IdSelector* selector, int *potentialSize);
