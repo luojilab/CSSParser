@@ -13,12 +13,10 @@
 namespace future {
 
 StringUtil::StringUtil() {
-	// TODO 自动生成的构造函数存根
 
 }
 
 StringUtil::~StringUtil() {
-	// TODO 自动生成的析构函数存根
 }
 
 std::string StringUtil::longlong2str(long long in) {
