@@ -425,17 +425,38 @@ namespace future {
                     ret = nodeAttrValue == value;
                     break;
                 }
-                case AttributeSelector::DashMatch:
-                case AttributeSelector::Prefix: {    // TODO tell the difference between include and substring
-                    ret = nodeAttrValue.rfind(value, 0) == 0;
+                case AttributeSelector::DashMatch: {
+                    if (nodeAttrValue.find("-") == std::string::npos) {
+                        break;
+                    }
+                    std::list<std::string> attrs = StringUtil::SeperatorBy(nodeAttrValue, '-');
+                    ret = *attrs.begin() == value;
+                    break;
+                }
+                case AttributeSelector::Prefix: {
+                    ret = nodeAttrValue.find(value, 0) == 0;
                     break;
                 }
                 case AttributeSelector::Suffix: {
                     ret = nodeAttrValue.rfind(value) + value.length() == nodeAttrValue.length();
                     break;
                 }
-                case AttributeSelector::Include:
-                case AttributeSelector::Substring: {    // TODO tell the difference between include and substring
+                case AttributeSelector::Include: {
+                    if (nodeAttrValue.find(" ") == std::string::npos) {
+                        break;
+                    }
+                    std::list<std::string> attrs = StringUtil::SeperatorBy(nodeAttrValue, ' ');
+                    auto it = attrs.begin();
+                    auto end = attrs.end();
+                    while (it != end) {
+                        if (*it++ == value) {
+                            ret = true;
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case AttributeSelector::Substring: {
                     ret = nodeAttrValue.find(value, 0) != std::string::npos;
                     break;
                 }
