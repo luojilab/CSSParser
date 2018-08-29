@@ -11,7 +11,7 @@
 
 namespace future {
     
-    void cleanListElement(std::list<Selector *>list)
+    void cleanListElement(std::list<Selector *>&list)
     {
         auto it = list.begin();
         auto end = list.end();
