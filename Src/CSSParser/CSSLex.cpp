@@ -26,7 +26,7 @@ namespace future {
         CleanResource();
     }
     
-    void Lex::SetBufferSource(const std::string fileName)
+    void Lex::SetBufferSource(const std::string& fileName)
     {
         if (fileName.empty()) {
             return;
@@ -50,6 +50,22 @@ namespace future {
         memset((void *)m_buffer, 0, bufferSize);
         m_bufferSize = fread((void *)m_buffer, 1, bufferSize, fileHandler);
         fclose(fileHandler);
+        m_firstPos = 0;
+        m_forwardPos = 0;
+    }
+    
+    void Lex::SetBufferString(const std::string &bufferString)
+    {
+        if (bufferString.empty()) {
+            return;
+        }
+        if (m_buffer) {
+            delete [] m_buffer;
+            m_buffer = 0;
+        }
+        m_bufferSize = bufferString.size();
+        m_buffer = new char[m_bufferSize];
+        memcpy((void *)m_buffer, bufferString.data(), m_bufferSize);
         m_firstPos = 0;
         m_forwardPos = 0;
     }

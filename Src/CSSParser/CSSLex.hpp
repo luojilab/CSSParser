@@ -32,7 +32,8 @@ namespace future {
         virtual ~Lex();
         CSSToken*       GetToken();
         void            CleanResource();
-        void            SetBufferSource(const std::string fileName);
+        void            SetBufferSource(const std::string& fileName);
+        void            SetBufferString(const std::string& bufferString);
     private:
         CSSToken*   GetIdentToken();
         CSSToken*   GetTextToken(char stringType);

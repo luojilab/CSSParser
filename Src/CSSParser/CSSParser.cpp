@@ -37,12 +37,39 @@ operatorStack.pop();
         stack.swap(st);
     }
     
-    bool CSSParser::parse(const std::string &cssPath) {
+    void CSSParser::prepareByFile(const std::string &cssPath)
+    {
+        m_hostCssFile = cssPath;
+        m_selectors.clear();
+        m_lexer->SetBufferSource(cssPath);
+    }
+    
+    void CSSParser::prepareByString(const std::string &cssString)
+    {
+        m_hostCssFile.clear();
+        m_selectors.clear();
+        m_lexer->SetBufferString(cssString);
+    }
+    
+    bool CSSParser::parseByFile(const std::string &cssPath) {
         if (cssPath.empty()) {
             return false;
         }
-        m_selectors.clear();
-        m_lexer->SetBufferSource(cssPath);
+        prepareByFile(cssPath);
+        return parse();
+    }
+    
+    bool CSSParser::parseByString(const std::string &cssString)
+    {
+        if (cssString.empty()) {
+            return false;
+        }
+        prepareByString(cssString);
+        return parse();
+    }
+    
+    bool CSSParser::parse()
+    {
         std::stack<Selector *> syntaxStack;
         Lex::CSSToken *token = m_lexer->GetToken();
         m_status = START;
@@ -124,7 +151,7 @@ operatorStack.pop();
                                 group->addSelector(node->head);
                             } else {
                                 node->head->setRuleData(token->data);
-                                node->head->setHostCSSFilePath(cssPath);
+                                node->head->setHostCSSFilePath(m_hostCssFile);
                                 m_selectors.push_front(node->head);
                             }
                             LRMtranverseAST(*it++, cleanASTTree);
@@ -132,7 +159,7 @@ operatorStack.pop();
                         if (isGroupSelector) {
                             m_selectors.push_back(group);
                             group->setRuleData(token->data);
-                            group->setHostCSSFilePath(cssPath);
+                            group->setHostCSSFilePath(m_hostCssFile);
                         }
                         m_status = START;
                     } else {

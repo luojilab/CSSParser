@@ -42,7 +42,12 @@ namespace future {
         /**
          * Start parsing a css file
          */
-        bool                        parse(const std::string& cssFile);
+        bool                        parseByFile(const std::string& cssFile);
+        
+        /**
+         * Start parsing css string
+         */
+        bool                        parseByString (const std::string& cssString);
         
         /**
          * Get the selector models
@@ -62,6 +67,12 @@ namespace future {
         static void             initialASTNode(ASTNode *target, Selector* head, ASTNode* left, ASTNode* right);
         
         static void             pushOperatedElement(std::stack<ASTNode *>&, Selector* head);
+        
+        bool                    parse();
+        
+        void                    prepareByFile(const std::string& filePath);
+        
+        void                    prepareByString(const std::string& cssString);
         
         void                    clean();
         
@@ -87,11 +98,12 @@ namespace future {
         
         void                    MLRtranverseAST(ASTNode *root, treeTranverseWithUserDataAction action, void *userData);
     private:
-        Lex* m_lexer;
-        CSSParserStatus m_status;
-        std::list<Lex::CSSToken *> m_tokenStack;
-        std::list<Selector *> m_selectors;
-        std::list<KeywordItem *> m_keywords;
+        Lex*                        m_lexer;
+        CSSParserStatus             m_status;
+        std::string                 m_hostCssFile;
+        std::list<Lex::CSSToken *>  m_tokenStack;
+        std::list<Selector *>       m_selectors;
+        std::list<KeywordItem *>    m_keywords;
     };
 }
 
