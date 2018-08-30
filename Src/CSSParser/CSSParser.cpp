@@ -110,8 +110,8 @@ operatorStack.pop();
                         }
                         std::list<ASTNode *> astContainer = createATS(syntaxStack);
                         eraseStack(syntaxStack);
-                        auto it = astContainer.begin();
-                        auto end = astContainer.end();
+                        std::list<ASTNode *>::iterator it = astContainer.begin();
+                        std::list<ASTNode *>::iterator end = astContainer.end();
                         bool isGroupSelector = astContainer.size() > 1;
                         GroupSelector* group = isGroupSelector ? new GroupSelector : 0;
                         while (it != end) {

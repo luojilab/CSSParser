@@ -20,8 +20,8 @@ namespace future {
     void CleanContainer(T& container)
     {
         container.unique();
-        auto it = container.begin();
-        auto end = container.end();
+        typename T::iterator it = container.begin();
+        typename T::iterator end = container.end();
         while (it != end) {
             delete *it++;
         }

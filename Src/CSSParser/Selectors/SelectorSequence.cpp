@@ -29,8 +29,8 @@ namespace future {
 
     int SequenceSelector::weight()
     {
-    	auto it = m_selectors.begin();
-    	auto end  = m_selectors.end();
+    	std::list<Selector *>::iterator it = m_selectors.begin();
+    	std::list<Selector *>::iterator end  = m_selectors.end();
     	int w = 0;
     	while(it != end) {
     		w += (*it++)->weight();

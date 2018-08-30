@@ -447,8 +447,8 @@ namespace future {
                         break;
                     }
                     std::list<std::string> attrs = StringUtil::SeperatorBy(nodeAttrValue, ' ');
-                    auto it = attrs.begin();
-                    auto end = attrs.end();
+                    std::list<std::string>::iterator it = attrs.begin();
+                    std::list<std::string>::iterator end = attrs.end();
                     while (it != end) {
                         if (*it++ == value) {
                             ret = true;
@@ -493,8 +493,8 @@ namespace future {
         std::list<GumboNode *>potentialNextNodes;
         for (int i = 0 ; i < loopSize; i++) {
             std::list<Selector *>ss = selector->getContrains();
-            auto it = ss.begin();
-            auto end = ss.end();
+            std::list<Selector *>::iterator it = ss.begin();
+            std::list<Selector *>::iterator end = ss.end();
             while(it != end) {
                 GumboArray elementA = nodesBackup + i;
                 ret = nodeAdaptToSelector(&elementA, *it++) && ret;
@@ -520,8 +520,8 @@ namespace future {
         int loopSize = *potentialSize;
         for (int i = 0 ; i < loopSize; i ++) {
             std::list<Selector *>ss = selector->getAllSelectors();
-            auto it = ss.begin();
-            auto end = ss.end();
+            std::list<Selector *>::iterator it = ss.begin();
+            std::list<Selector *>::iterator end = ss.end();
             while(it != end) {
                 GumboArray elementA = nodesBackup + i;
                 ret = nodeAdaptToSelector(&elementA, *it++) || ret;
@@ -716,8 +716,8 @@ namespace future {
     
     void HTMLCSSRefAdaptor::updateNextNodes(const std::list<GumboNode *>& potentialNextNodes, future::HTMLCSSRefAdaptor::GumboArrayPtr nodeArrayPtr, int *potentialSize)
     {
-        auto it = potentialNextNodes.begin();
-        auto end = potentialNextNodes.end();
+        std::list<GumboNode *>::const_iterator it = potentialNextNodes.begin();
+        std::list<GumboNode *>::const_iterator end = potentialNextNodes.end();
         int idx = 0;
         int size = (int)potentialNextNodes.size();
         if (size) {
@@ -734,8 +734,8 @@ namespace future {
     void HTMLCSSRefAdaptor::CleanResource()
     {
         SMemoryBackup.unique();
-        auto it = SMemoryBackup.begin();
-        auto end = SMemoryBackup.end();
+        std::list<HTMLCSSRefAdaptor::GumboArray>::iterator it = SMemoryBackup.begin();
+        std::list<HTMLCSSRefAdaptor::GumboArray>::iterator end = SMemoryBackup.end();
         while (it != end) {
             delete [] *it++;
         }
