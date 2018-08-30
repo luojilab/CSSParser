@@ -29,8 +29,9 @@ void tranversTree(GumboNode *root, future::Selector* selector)
 }
 
 int main(int argc, const char * argv[]) {
-//    using namespace future;
-    FILE *f = fopen("/Users/lmonster/Desktop/test.html", "r");
+    const char* htmlPath = "/Path/To/HTMLFile";
+    const char* cssPath = "/Path/To/CSSFile";
+    FILE *f = fopen(htmlPath, "r");
     fseek(f, 0, SEEK_END);
     size_t size = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -40,7 +41,7 @@ int main(int argc, const char * argv[]) {
     
     future::GumboInterface gi(ptr, "2");
     future::CSSParser* parser = new future::CSSParser;
-    parser->parse("/Users/lmonster/Desktop/test.css");
+    parser->parse(cssPath);
     std::list<future::Selector *>selectors = parser->getSelectors();
     delete parser;
     for (future::Selector *s : selectors) {
