@@ -14,8 +14,8 @@
 #include <stack>
 #include "CSSLex.hpp"
 #include "CSSParserStatus.h"
-#include "SelectorsHeader.h"
-#include "KeywordItem.hpp"
+#include "Keyword/KeywordItem.hpp"
+#include "Selectors/SelectorsHeader.h"
 
 namespace future {
     class Lex;
