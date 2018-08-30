@@ -25,12 +25,12 @@ namespace future {
         void addSelector(Selector *);
         std::list<Selector *>getAllSelectors()
         {
-            return m_slectors;
+            return m_selectors;
         }
         bool isBaseSelector();
         int weight();
     private:
-        std::list<Selector *> m_slectors;
+        std::list<Selector *> m_selectors;
     };
 }
 

@@ -19,12 +19,7 @@ namespace future {
     
     SequenceSelector::~SequenceSelector()
     {
-        auto it = m_selectors.begin();
-        auto end = m_selectors.end();
-        while (it != end) {
-            delete *it++;
-        }
-        m_selectors.clear();
+        CleanContainer(m_selectors);
     }
 
     bool SequenceSelector::isBaseSelector()

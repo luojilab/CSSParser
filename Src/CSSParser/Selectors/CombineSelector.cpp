@@ -11,22 +11,12 @@
 
 namespace future {
     
-    void cleanListElement(std::list<Selector *>&list)
-    {
-        auto it = list.begin();
-        auto end = list.end();
-        while (it != end) {
-            delete *it++;
-        }
-        list.clear();
-    }
-    
     CombineSelector::~CombineSelector()
     {
-        cleanListElement(m_normalSiblingList);
-        cleanListElement(m_instanceSiblingList);
-        cleanListElement(m_normalInhericalList);
-        cleanListElement(m_instanceSiblingList);
+        CleanContainer(m_normalSiblingList);
+        CleanContainer(m_instanceSiblingList);
+        CleanContainer(m_normalInhericalList);
+        CleanContainer(m_instanceSiblingList);
     }
     
     void CombineSelector::initialNormalSiblingList(future::Selector *head, future::Selector *sibling)
@@ -37,7 +27,7 @@ namespace future {
         if (!head || !sibling) {
             return;
         }
-        cleanListElement(m_normalSiblingList);
+        CleanContainer(m_normalSiblingList);
         m_normalSiblingList.clear();
         m_normalSiblingList.push_back(head);
         m_normalSiblingList.push_back(sibling);
@@ -52,7 +42,7 @@ namespace future {
         if (!head || !sibling) {
             return;
         }
-        cleanListElement(m_instanceSiblingList);
+        CleanContainer(m_instanceSiblingList);
         m_instanceSiblingList.clear();
         m_instanceSiblingList.push_back(head);
         m_instanceSiblingList.push_back(sibling);
@@ -67,7 +57,7 @@ namespace future {
         if (!root || !child) {
             return;
         }
-        cleanListElement(m_normalInhericalList);
+        CleanContainer(m_normalInhericalList);
         m_normalInhericalList.clear();
         m_normalInhericalList.push_back(root);
         m_normalInhericalList.push_back(child);
@@ -82,7 +72,7 @@ namespace future {
         if (!root || !child) {
             return;
         }
-        cleanListElement(m_instanceInhericalList);
+        CleanContainer(m_instanceInhericalList);
         m_instanceInhericalList.clear();
         m_instanceInhericalList.push_back(root);
         m_instanceInhericalList.push_back(child);

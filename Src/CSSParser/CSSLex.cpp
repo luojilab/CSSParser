@@ -8,6 +8,7 @@
 
 #include "CSSLex.hpp"
 #include <string.h>
+#include "ContainerUtil.hpp"
 
 #define NextChar(buffer) *(buffer + m_forwardPos++)
 #define ErrorInLoop STATUS = LexError;stopLoop = true;
@@ -652,12 +653,7 @@ namespace future {
     {
         delete [] m_buffer;
         m_buffer = 0;
-        auto it = m_tokenCache.begin();
-        auto end = m_tokenCache.end();
-        while (it != end) {
-            delete *it++;
-        }
-        m_tokenCache.clear();
+        CleanContainer(m_tokenCache);
     }
     
     inline bool Lex::isDigitalCharacter(char c) {

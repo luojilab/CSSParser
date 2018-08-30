@@ -43,11 +43,11 @@ int main(int argc, const char * argv[]) {
     future::CSSParser* parser = new future::CSSParser;
     parser->parse(cssPath);
     std::list<future::Selector *>selectors = parser->getSelectors();
-    delete parser;
     for (future::Selector *s : selectors) {
         tranversTree(gi.get_root_node(), s);
         printf("\n");
     }
     delete [] ptr;
+    delete parser;
     return 0;
 }

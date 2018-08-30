@@ -15,17 +15,12 @@ namespace future {
         if (!s) {
             return ;
         }
-        m_slectors.push_back(s);
+        m_selectors.push_back(s);
     }
     
     GroupSelector::~GroupSelector()
     {
-        auto it = m_slectors.begin();
-        auto end = m_slectors.end();
-        while (it != end) {
-            delete *it++;
-        }
-        m_slectors.clear();
+        CleanContainer(m_selectors);
     }
 
     bool GroupSelector::isBaseSelector()
@@ -35,8 +30,8 @@ namespace future {
 
     int GroupSelector::weight()
     {
-    	auto it = m_slectors.begin();
-    	auto end = m_slectors.end();
+    	auto it = m_selectors.begin();
+    	auto end = m_selectors.end();
     	int w = 0;
     	while(it != end) {
     		w += (*it++)->weight();
