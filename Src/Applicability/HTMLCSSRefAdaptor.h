@@ -18,7 +18,18 @@ public:
     typedef GumboNode** GumboArray;
 	HTMLCSSRefAdaptor();
 	virtual ~HTMLCSSRefAdaptor();
-	static bool nodeAdaptToSelector(GumboArrayPtr node, Selector* selector, int *potentialSize = 0);
+    /**
+     * Check Whether a selector can apply to the node in nodes
+     * @param nodes the check nodes
+     * @param selector the selector
+     * @param potentialSize the size of nodes array
+     * @note the nodes can be changed after the comparing.
+     */
+	static bool nodeAdaptToSelector(GumboArrayPtr nodes, Selector* selector, int *potentialSize = 0);
+    
+    /**
+     * Clean all resource after the compare
+     */
     static void CleanResource();
 
 private:

@@ -560,6 +560,7 @@ void CSSParser::clean() {
 	m_tokenStack.clear();
 	if (m_lexer) {
 		m_lexer->CleanResource();
+        delete m_lexer;
 		m_lexer = NULL;
 	}
 }

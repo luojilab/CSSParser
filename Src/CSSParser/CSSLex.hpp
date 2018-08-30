@@ -29,11 +29,11 @@ namespace future {
         };
     public:
         Lex();
+        virtual ~Lex();
         CSSToken*       GetToken();
         void            CleanResource();
         void            SetBufferSource(const std::string fileName);
     private:
-        ~Lex();
         CSSToken*   GetIdentToken();
         CSSToken*   GetTextToken(char stringType);
         bool        isDigitalCharacter(char);
