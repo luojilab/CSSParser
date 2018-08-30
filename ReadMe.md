@@ -57,5 +57,4 @@ future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector);
 ## Dependency
 
 * [Google Gumbo](https://github.com/google/gumbo-parser)
-* [Sigil](https://github.com/Sigil-Ebook/Sigil) Gumbo Interface
 
