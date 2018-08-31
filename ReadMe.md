@@ -1,4 +1,5 @@
 # DDCSSParser - A C++ CSS Parser
+[English document](./README-EN.md)
 
 DDCSSParser是一个C++实现的css解析器。最终会生成一系列的selector的模型（Selector类），并且会依据一个Selector判断CSS是否适用于某一个HTML的DOM节点。
 
