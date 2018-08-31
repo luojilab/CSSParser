@@ -6,7 +6,7 @@ DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a s
 
 ## Installation
 
-* Copy source code in working directory `git clone xxx`
+* Copy source code in working directory `git clone https://github.com/luojilab/CSSParser.git`
 * Extract the source code in **Src** directory into working project
 
 ## Feature
