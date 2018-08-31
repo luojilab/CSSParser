@@ -2,7 +2,7 @@
 
 [中文文档](./README.md)
 
-DDCSSParser is a CSS parser using c++. By this parser, user can get a series of CSS model (class Selector) and check whether a CSS model (a CSS rule) can be applied to an HTML DOM node.
+DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a series of CSS model and check whether a CSS model (a CSS rule) can be applied to an HTML DOM node.
 
 ## Installation
 
@@ -19,6 +19,8 @@ DDCSSParser is a CSS parser using c++. By this parser, user can get a series of 
   - Attribute Selector
   - Class Selector
   - ID Selector
+- Selector Sequence
+- Selector Group
 - Combinators:
   - Descendant combinator
   - Child combinators
