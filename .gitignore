@@ -43,6 +43,10 @@ m4/
 missing
 test-driver
 test-suite.log
+ar-lib
+config.h.in
+config.h
+stamp-h1
 
 #bin
 example
