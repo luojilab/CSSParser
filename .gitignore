@@ -1,8 +1,48 @@
 #build products
 *.o
 *.d
+*.a
 
-#AutoTools
+# Editor swap files
+*.swp
+*.swo
+*.swn
+
+# Other build artifacts
+/Debug
+/visualc/Debug
+/visualc/Release
+/visualc/gumbo.sdf
+/visualc/gumbo.opensdf
+/build
+.log
+.sdf
+.opensdf
+.deps
+.dirstamp
+.libs
 Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+compile
+config.guess
+config.log
+config.status
+config.sub
 configure
-*.m4
+depcomp
+gumbo.pc
+gumbo_test
+gumbo_test.log
+gumbo_test.trs
+install-sh
+libtool
+ltmain.sh
+m4/
+missing
+test-driver
+test-suite.log
+
+#bin
+example
