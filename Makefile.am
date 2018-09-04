@@ -33,6 +33,13 @@ libcssparser_a_SOURCES = \
 												 src/Vendor/Utils/StringUtil.cpp
 
 bin_PROGRAMS = example
+libcssparser_a_CPPFLAGS = \
+													-Isrc/Applicability\
+													-Isrc/CSSParser\
+													-Isrc/CSSParser/Keyword\
+													-Isrc/CSSParser/Selectors\
+													-Isrc/Vendor/gumbo\
+													-Isrc/Vendor/Utils
 example_CPPFLAGS =\
                   -Isrc/Applicability\
 									-Isrc/CSSParser\
