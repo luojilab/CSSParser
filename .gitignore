@@ -1,0 +1,8 @@
+#build products
+*.o
+*.d
+
+#AutoTools
+Makefile
+configure
+*.m4
