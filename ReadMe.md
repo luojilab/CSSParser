@@ -10,8 +10,17 @@ DDCSSParser是一个C++实现的css解析器。最终会生成一系列的select
 
 ## 安装
 
+##### 使用代码
+
 * 将代码拷贝至本地`git clone https://github.com/luojilab/CSSParser.git`
 * 提取出来**Src**文件夹中的内容到工程中
+
+##### 运行demo
+
+* `./autogen.sh`
+* `./configure`
+* `make`
+* `./example`
 
 ## 特性
 
