@@ -50,6 +50,11 @@ enum CSSDFAStatus {
     string2End,
     annotationStart,
     annotationEnd,
+    function,
+    numberStart,
+    num,
+    rightBracket,
+    minus,
     LexError
 };
 enum CSSTokenType {
@@ -84,6 +89,8 @@ enum CSSTokenType {
     EQUAL,
     ANNOTATION,
     SYNTAXEND,
+    RIGHTBRACKET,
+    MINUS,
     END
 };
 #define IDENT_START_SIGN    '-'

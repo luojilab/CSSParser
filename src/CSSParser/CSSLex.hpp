@@ -37,6 +37,7 @@ namespace future {
     private:
         CSSToken*   GetIdentToken();
         CSSToken*   GetTextToken(char stringType);
+        CSSToken*   GetNumberToken();
         bool        isDigitalCharacter(char);
         bool        isLetter(char);
         bool        isHexCharacter(char);

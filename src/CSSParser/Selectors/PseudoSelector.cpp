@@ -10,6 +10,12 @@
 
 namespace future {
 
+    PseudoSelector::~PseudoSelector()
+    {
+        delete m_parameter;
+        m_parameter = NULL;
+    }
+    
 	bool PseudoSelector::isBaseSelector()
 	{
 		return true;
@@ -19,4 +25,15 @@ namespace future {
 	{
 		return 10;
 	}
+    
+    void PseudoSelector::setParameter(future::PseudoSelector::Parameter *p)
+    {
+        if (m_parameter == p) {
+            return;
+        }
+        if (m_parameter) {
+            delete m_parameter;
+        }
+        m_parameter = p;
+    }
 }

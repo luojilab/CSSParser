@@ -84,6 +84,8 @@ namespace future {
         
         Selector*               getSelector(Lex::CSSToken* token);
         
+        PseudoSelector::Parameter* getFunctionParamenter();
+        
         std::list<ASTNode *>    createATS(std::stack<Selector *>&);
         
         void                    pushSign(std::stack<Selector *>&, SignSelector::SignType);

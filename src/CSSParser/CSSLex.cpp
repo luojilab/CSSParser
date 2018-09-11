@@ -13,6 +13,9 @@
 #define NextChar(buffer) *(buffer + m_forwardPos++)
 #define ErrorInLoop STATUS = LexError;stopLoop = true;
 #define WS_CASE ' ': case '\r': case '\n': case '\t': case '\f'
+#define NUMBER_CASE '0': case '1': case '2': case '3': case '4':\
+case '5': case '6': case '7': case '8': case '9'
+
 namespace future {
     Lex::Lex()
     {
@@ -255,6 +258,71 @@ namespace future {
         return token;
     }
     
+    Lex::CSSToken* Lex::GetNumberToken()
+    {
+        enum {_start, _numberStart, _numberFinish, _numberInDecimal, _error};
+        std::string s;
+        char status = _start;
+        char c = NextChar(m_buffer);
+        std::string data;
+        while (1) {
+            switch (status) {
+                case _start: {
+                    if (!isDigitalCharacter(c)) {
+                        status = _error;
+                        break;
+                    } else {
+                        status = _numberStart;
+                        data.append(std::string(1, c));
+                    }
+                    break;
+                }
+                case _numberStart: {
+                    if (!isDigitalCharacter(c)) {
+                        if (c == '.') {
+                            status = _numberInDecimal;
+                        } else {
+                            status = _numberFinish;
+                            break;
+                        }
+                    }
+                    data.append(std::string(1, c));
+                    break;
+                }
+                case _numberInDecimal:{
+                    if (!isDigitalCharacter(c)) {
+                        status = _numberFinish;
+                    }
+                    data.append(std::string(1, c));
+                    break;
+                }
+                default: {
+                    status = _error;
+                    break;
+                }
+            }
+            if (status == _numberFinish ||
+                status == _error) {
+                --m_forwardPos;
+                break;
+            }
+            if (m_bufferSize <= m_forwardPos + 1) {
+                status = _numberFinish;
+                break;
+            }
+            c = NextChar(m_buffer);
+        }
+        
+        if (data.size() == 0) {
+            return NULL;
+        } else {
+            CSSToken* token = new CSSToken;
+            token->type = NUMBER;
+            token->data = data;
+            return token;
+        }
+    }
+    
     Lex::CSSToken* Lex::GetToken()
     {
         CSSToken* token = new CSSToken;
@@ -282,6 +350,7 @@ namespace future {
                             } else {
                                 STATUS = LexError;
                             }
+                            delete identToken;
                             break;
                         }
                         case '#': {
@@ -293,6 +362,7 @@ namespace future {
                             } else {
                                 STATUS = LexError;
                             }
+                            delete identToken;
                             break;
                         }
                         case '~': {
@@ -409,20 +479,41 @@ namespace future {
                         	STATUS = semicolon;
                         	break;
                         }
+                        case NUMBER_CASE: {
+                            --m_forwardPos;
+                            STATUS = numberStart;
+                            break;
+                        }
+                        case ')': {
+                            STATUS = rightBracket;
+                            break;
+                        }
+                        case '-': {
+                            STATUS = minus;
+                            break;
+                        }
                             
                         default: {
                         identLabel:
                             m_forwardPos = m_firstPos;
                             CSSToken* idToken = GetIdentToken();
-                            if (idToken->type == IDENT) {
-                                STATUS = iDent;
+                            char next = NextChar(m_buffer);
+                            if (next == '(') {
+                                STATUS = function;
                                 data = idToken->data;
-                            } else if (idToken->type == END) {
-                                STATUS = end;
                             } else {
-                                STATUS = LexError;
+                                --m_forwardPos;
+                                if (idToken->type == IDENT) {
+                                    STATUS = iDent;
+                                    data = idToken->data;
+                                } else if (idToken->type == END) {
+                                    STATUS = end;
+                                } else {
+                                    STATUS = LexError;
+                                }
                             }
                             stopLoop = true;
+                            delete idToken;
                             break;
                         }
                     }
@@ -497,6 +588,18 @@ namespace future {
                     }
                     break;
                 }
+                case numberStart: {
+                    --m_forwardPos;
+                    CSSToken* numberToken = GetNumberToken();
+                    if (numberToken) {
+                        data = numberToken->data;
+                        STATUS = num;
+                    } else {
+                        STATUS = LexError;
+                    }
+                    delete numberToken;
+                    break;
+                }
                     
                 default:
                     break;
@@ -510,6 +613,7 @@ namespace future {
                 }
                 case LexError: {
                     token->type = ERROR;
+                    stopLoop = true;
                     break;
                 }
                 case Hash: {
@@ -635,6 +739,32 @@ namespace future {
                     stopLoop = true;
                     break;
                 }
+                case function: {
+                    token->type = FUNCTION;
+                    token->data = data;
+                    stopLoop = true;
+                    break;
+                }
+                case numberStart: {
+                    stopLoop = false;
+                    break;
+                }
+                case num: {
+                    token->data = data;
+                    token->type = NUMBER;
+                    stopLoop = true;
+                    break;
+                }
+                case rightBracket: {
+                    token->type = RIGHTBRACKET;
+                    stopLoop = true;
+                    break;
+                }
+                case minus: {
+                    token->type = MINUS;
+                    stopLoop = true;
+                    break;
+                }
                 default:
                     break;
             }
@@ -669,7 +799,8 @@ namespace future {
     {
         delete [] m_buffer;
         m_buffer = 0;
-        CleanContainer(m_tokenCache);
+        std::list<CSSToken *>& ref = m_tokenCache;
+        CleanContainer(ref);
     }
     
     inline bool Lex::isDigitalCharacter(char c) {

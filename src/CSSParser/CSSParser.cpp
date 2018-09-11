@@ -11,6 +11,7 @@
 #include <string.h>
 #include <assert.h>
 #include "ContainerUtil.hpp"
+#include "StringUtil.h"
 
 namespace future {
     
@@ -177,7 +178,7 @@ operatorStack.pop();
     }
     
     Selector* CSSParser::getSelector(Lex::CSSToken* token) {
-        Selector* selector = 0;
+        Selector* selector = NULL;
         switch (token->type) {
             case STAR: {
                 selector = new UniversalSelector();
@@ -315,6 +316,13 @@ operatorStack.pop();
                 if (t->type == IDENT) {
                     PseudoSelector* s = new PseudoSelector(t->data);
                     selector = s;
+                } else if (t->type == FUNCTION) {
+                    PseudoSelector* s = new PseudoSelector(t->data);
+                    PseudoSelector::Parameter* parameter = getFunctionParamenter();
+                    if (parameter) {
+                        s->setParameter(parameter);
+                    }
+                    selector = s;
                 } else {
                     return selector;
                 }
@@ -327,8 +335,126 @@ operatorStack.pop();
         return selector;
     }
     
-    std::list<CSSParser::ASTNode *> CSSParser::createATS(
-                                                         std::stack<Selector *>&syntax) {
+    PseudoSelector::Parameter* CSSParser::getFunctionParamenter()
+    {
+#define CleanRetAndStopLoop delete parameter; parameter = NULL; endLoop = true
+        enum {_start, _inNumber, _inString, _inIdent, _inPolynomialLeft, _inPolynomialRight, _number, _polynomial, _error};
+        PseudoSelector::Parameter* parameter = new PseudoSelector::Parameter;
+        char state = _start;
+        bool endLoop = false;
+        Lex::CSSToken* token = m_lexer->GetToken();
+        while (1) {
+            switch (state) {
+                case _start: {
+                    if (token->type == NUMBER) {
+                        parameter->type = PseudoSelector::ParameterType::NUMBER;
+                        parameter->pNumber = StringUtil::str2int(token->data);
+                        state = _inNumber;
+                    } else if (token->type == IDENT) {
+                        parameter->type = PseudoSelector::ParameterType::IDENT;
+                        state = _inIdent;
+                        parameter->pString = token->data;
+                    } else if (token->type == STRING) {
+                        parameter->type = PseudoSelector::ParameterType::STRING;
+                        state = _inString;
+                        parameter->pString = token->data;
+                    } else if (token->type == WS) {
+                        state = _start;
+                        break;
+                    } else if (token->type == RIGHTBRACKET) {
+                        CleanRetAndStopLoop;
+                    } else {
+                        CleanRetAndStopLoop;
+                        state = _error;
+                    }
+                    break;
+                }
+                case _inString:
+                case _inIdent: {
+                    if (token->type == WS) {
+                        break;
+                    } else if (token->type == RIGHTBRACKET) {
+                        endLoop = true;
+                    } else {
+                        state = _error;
+                        CleanRetAndStopLoop;
+                    }
+                    break;
+                }
+                case _inNumber: {
+                    if (token->type == WS) {
+                        state = _number;
+                    } else if (token->type == IDENT) {
+                        state = _inPolynomialLeft;
+                        parameter->type = PseudoSelector::ParameterType::POLYNOMIAL;
+                        parameter->polynomial.coefficient = parameter->pNumber;
+                    } else if (token->type == RIGHTBRACKET) {
+                        endLoop = true;
+                        state = _number;
+                    } else {
+                        CleanRetAndStopLoop;
+                        state = _error;
+                    }
+                    break;
+                }
+                case _inPolynomialLeft: {
+                    if (token->type == WS) {
+                        state = _inPolynomialLeft;
+                    } else if (token->type == PLUS) {
+                        parameter->polynomial.sign = 1;
+                        state = _inPolynomialRight;
+                    } else if (token->type == MINUS) {
+                        parameter->polynomial.sign = -1;
+                        state = _inPolynomialRight;
+                    } else {
+                        CleanRetAndStopLoop;
+                        state = _error;
+                    }
+                    break;
+                }
+                case _inPolynomialRight: {
+                    if (token->type == WS) {
+                        break;
+                    } else if (token->type == NUMBER) {
+                        parameter->polynomial.constant = StringUtil::str2int(token->data);
+                        state = _polynomial;
+                    } else if (token->type == RIGHTBRACKET) {
+                        endLoop = true;
+                        state = _polynomial;
+                    } else {
+                        CleanRetAndStopLoop;
+                        state = _error;
+                    }
+                    break;
+                }
+                case _number:
+                case _polynomial: {
+                    if (token->type == WS) {
+                        break;
+                    } else if (token->type == RIGHTBRACKET) {
+                        endLoop = true;
+                    } else {
+                        CleanRetAndStopLoop;
+                        state = _error;
+                    }
+                    break;
+                }
+                case _error: {
+                    return NULL;
+                }
+                default: {
+                    CleanRetAndStopLoop;
+                    state = _error;
+                    break;
+                }
+            }
+            if (endLoop) {break;}
+            token = m_lexer->GetToken();
+        }
+        return parameter;
+    }
+    
+    std::list<CSSParser::ASTNode *> CSSParser::createATS(std::stack<Selector *>&syntax) {
         std::stack<ASTNode *> operatorStack;
         std::stack<ASTNode *> operandStack;
         std::list<ASTNode *> atsCollection;

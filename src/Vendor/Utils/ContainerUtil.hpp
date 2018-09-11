@@ -12,20 +12,19 @@
 #include <stdio.h>
 
 namespace future {
+#define CleanContainer(c) c.unique(); _CleanContainer(c); c.clear();
     /*
      * Container type must be STL Sequence
      * because of the unique and forword iterator conception
      */
     template<class T>
-    void CleanContainer(T& container)
+    void _CleanContainer(const T& container)
     {
-        container.unique();
-        typename T::iterator it = container.begin();
-        typename T::iterator end = container.end();
+        typename T::const_iterator it = container.begin();
+        typename T::const_iterator end = container.end();
         while (it != end) {
             delete *it++;
         }
-        container.clear();
     }
 }
 
