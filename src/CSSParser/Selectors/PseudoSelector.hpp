@@ -61,6 +61,10 @@ namespace future {
         int weight();
         
         void setParameter(Parameter *);
+        
+        std::string getPseudoData();
+        
+        Parameter* getParameter();
     private:
         std::string m_data;
         Parameter* m_parameter;

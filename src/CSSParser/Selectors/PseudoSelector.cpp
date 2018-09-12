@@ -36,4 +36,14 @@ namespace future {
         }
         m_parameter = p;
     }
+    
+    PseudoSelector::Parameter* PseudoSelector::getParameter()
+    {
+        return m_parameter;
+    }
+    
+    std::string PseudoSelector::getPseudoData()
+    {
+        return m_data;
+    }
 }

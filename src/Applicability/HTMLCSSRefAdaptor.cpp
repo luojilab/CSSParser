@@ -7,6 +7,7 @@
 
 #include "HTMLCSSRefAdaptor.h"
 #include "StringUtil.h"
+#include "PseudoSelectorRefChiefJudge.hpp"
 
 extern const int HTMLTAGMAXSIZE = 257;
 const char* HTMLTagNames[] = {
@@ -477,11 +478,29 @@ namespace future {
         return ret;
     }
     
-    bool HTMLCSSRefAdaptor::nodeAdaptToPseudoSelector(GumboNode ***node, PseudoSelector* selector, int *potentialSize)
+    bool HTMLCSSRefAdaptor::nodeAdaptToPseudoSelector(GumboNode ***nodePtr, PseudoSelector* selector, int *potentialSize)
     {
         // TODO need finish
-        *potentialSize = 1;
-        return true;
+        bool ret = true;
+        GumboNode* nodesBackup[*potentialSize];
+        BackupNodes(nodesBackup, *nodePtr, *potentialSize);
+        int loopSize = *potentialSize;
+        std::list<GumboNode *>potentialNextNodes;
+        std::string pseudo = selector->getPseudoData();
+        if (pseudo.empty()) {
+            return false;
+        }
+        for (int i = 0; i < loopSize; i++) {
+            GumboNode* node = nodesBackup[i];
+            ret = PseudoSelectorRefChiefJudge::nodeAdaptToPseudo(node, selector);
+            if (!ret) {
+                continue;
+            }
+            potentialNextNodes.push_back(node);
+        }
+        updateNextNodes(potentialNextNodes, nodePtr, potentialSize);
+        ret = !potentialNextNodes.empty();
+        return ret;
     }
     
     bool HTMLCSSRefAdaptor::nodeAdaptToSequenceSelector(GumboNode ***nodePtr, SequenceSelector* selector, int *potentialSize)
