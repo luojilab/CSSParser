@@ -28,6 +28,7 @@ public:
 	static void StringReplace(std::string &srcStr, const std::string &findStr,const std::string &replaceStr );
 	static std::string &trim (std::string &s);
     static std::list<std::string> SeperatorBy(const std::string& , char c);
+    static std::string DeleteCharacter(const std::string&, char);
 };
 
 }

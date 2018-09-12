@@ -108,4 +108,13 @@ namespace future {
         return container;
     }
     
+    std::string StringUtil::DeleteCharacter(const std::string &source, char target)
+    {
+        std::string dest = source;
+        std::binder1st<std::equal_to<char> > f =
+        std::bind1st(std::equal_to<char>(), target);
+        dest.erase(std::remove_if(dest.begin(), dest.end(), f), dest.end());
+        return dest;
+    }
+    
 }

@@ -357,7 +357,7 @@ operatorStack.pop();
                     } else if (token->type == STRING) {
                         parameter->type = PseudoSelector::ParameterType::STRING;
                         state = _inString;
-                        parameter->pString = token->data;
+                        parameter->pString = StringUtil::DeleteCharacter(token->data, '\"');
                     } else if (token->type == WS) {
                         state = _start;
                         break;
@@ -388,6 +388,7 @@ operatorStack.pop();
                         state = _inPolynomialLeft;
                         parameter->type = PseudoSelector::ParameterType::POLYNOMIAL;
                         parameter->polynomial.coefficient = parameter->pNumber;
+                        parameter->pNumber = 0;
                     } else if (token->type == RIGHTBRACKET) {
                         endLoop = true;
                         state = _number;
@@ -406,6 +407,10 @@ operatorStack.pop();
                     } else if (token->type == MINUS) {
                         parameter->polynomial.sign = -1;
                         state = _inPolynomialRight;
+                    } else if (token->type == RIGHTBRACKET) {
+                        parameter->polynomial.sign = 1;
+                        parameter->polynomial.constant = 0;
+                        endLoop = true;
                     } else {
                         CleanRetAndStopLoop;
                         state = _error;
