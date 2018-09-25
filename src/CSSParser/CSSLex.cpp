@@ -10,7 +10,7 @@
 #include <string.h>
 #include "ContainerUtil.hpp"
 
-#define NextChar(buffer) *(buffer + m_forwardPos++)
+#define NextChar(buffer) m_forwardPos >= m_bufferSize ? 0 : *(buffer + m_forwardPos++)
 #define ErrorInLoop STATUS = LexError;stopLoop = true;
 #define WS_CASE ' ': case '\r': case '\n': case '\t': case '\f'
 #define NUMBER_CASE '0': case '1': case '2': case '3': case '4':\
@@ -210,6 +210,7 @@ namespace future {
                     if (isHexCharacter(c)) {
                         for (int i = 0; i < 5; i++) {
                             c = NextChar(m_buffer);
+                            if (c == 0) {break;}
                             if (isHexCharacter(c)) {
                                 continue;
                             } else {
@@ -225,6 +226,7 @@ namespace future {
                     if (isHexCharacter(c)) {
                         for (int i = 0; i < 5; i++) {
                             c = NextChar(m_buffer);
+                            if (c == 0) {break;}
                             if (isHexCharacter(c)) {
                                 continue;
                             } else {
@@ -264,6 +266,7 @@ namespace future {
         std::string s;
         char status = _start;
         char c = NextChar(m_buffer);
+        if (c == 0) {return NULL;}
         std::string data;
         while (1) {
             switch (status) {
@@ -580,6 +583,7 @@ namespace future {
                 }
                 case annotationStart: {
                     char cn = NextChar(m_buffer);
+                    if (cn == 0) {break;}
                     if (c == '*' && cn == '/') {
                         STATUS = annotationEnd;
                     } else {

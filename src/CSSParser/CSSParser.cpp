@@ -74,7 +74,8 @@ operatorStack.pop();
         std::stack<Selector *> syntaxStack;
         Lex::CSSToken *token = m_lexer->GetToken();
         m_status = START;
-        while (token->type != END && token->type != ERROR) {
+        bool success = true;
+        while (token->type != END && token->type != ERROR && success) {
             switch (m_status) {
                 case START: {
                     if (token->type == WS) {
@@ -127,6 +128,18 @@ operatorStack.pop();
                             KeywordItem* keyword = *--m_keywords.end();
                             keyword->setData(t->data);
                         }
+                    } else if (token->type == WS) {
+                        break;
+                    } else if (token->type == STRING) {
+                        KeywordItem* keyword = *--m_keywords.end();
+                        keyword->setData(token->data);
+                        Lex::CSSToken* t = m_lexer->GetToken();
+                        if (t->type != SYNTAXEND) {
+                            success = false;
+                        } else {
+                            m_status = START;
+                        }
+                        break;
                     }
                     break;
                 }
@@ -164,7 +177,7 @@ operatorStack.pop();
                         }
                         m_status = START;
                     } else {
-                        return false;
+                        success = false;
                     }
                     
                     break;
@@ -172,9 +185,12 @@ operatorStack.pop();
                 default:
                     break;
             }
+            if (!success) {
+                break;
+            }
             token = m_lexer->GetToken();
         }
-        return true;
+        return success;
     }
     
     Selector* CSSParser::getSelector(Lex::CSSToken* token) {
