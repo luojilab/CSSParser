@@ -32,6 +32,7 @@ DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a s
   - Attribute Selector
   - Class Selector
   - ID Selector
+  - Pseudo Class
 - Selector Sequence
 - Selector Group
 - Combinators:
@@ -39,14 +40,9 @@ DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a s
   - Child combinators
   - Sibling combinators
 
-#### Unsupported CSS Selector:
-
-* Pseudo Class
-
 ## Goals to Achive
 
 * Remove dependency to [Gumbo](https://github.com/google/gumbo-parser)
-* Support parsing pseudo
 * Support modeling for CSS rule
 * Remove some potential bugs
 

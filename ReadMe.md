@@ -32,6 +32,7 @@ DDCSSParser是一个C++实现的css解析器。最终会生成一系列的select
   * Attribute Selector
   * Class Selector
   * ID Selector
+  * Pseudo Class
 * Selector Sequence
 * Selector Group
 * Combinators:
@@ -39,14 +40,9 @@ DDCSSParser是一个C++实现的css解析器。最终会生成一系列的select
   * Child combinators
   * Sibling combinators
 
-#### 不支持的CSS Selector：
-
-* 伪类（pseudo class）
-
 #### 将要实现的目标：
 
 * 移除对于[Gumbo](https://github.com/google/gumbo-parser)的依赖
-* 增加对于伪类的支持
 * 增加对于CSS规则的建模
 * 消除可能存在的一些bug
 
