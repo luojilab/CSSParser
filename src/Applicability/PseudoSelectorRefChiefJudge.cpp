@@ -154,7 +154,7 @@ namespace future {
         if (idx < parameter->polynomial.constant) {
             return false;
         }
-        return !((idx - parameter->polynomial.constant) % parameter->polynomial.coefficient);
+        return !((idx - parameter->polynomial.sign * parameter->polynomial.constant) % parameter->polynomial.coefficient);
     }
     
     std::map<std::string, bool>& PseudoSelectorRefChiefJudge::getDynamicPseudoClassMap()

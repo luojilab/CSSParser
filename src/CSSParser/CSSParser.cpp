@@ -367,9 +367,15 @@ operatorStack.pop();
                         parameter->pNumber = StringUtil::str2int(token->data);
                         state = _inNumber;
                     } else if (token->type == IDENT) {
-                        parameter->type = PseudoSelector::ParameterType::IDENT;
-                        state = _inIdent;
-                        parameter->pString = token->data;
+                        if (token->data == "n" || token->data == "N") {
+                            parameter->type = PseudoSelector::ParameterType::POLYNOMIAL;
+                            parameter->polynomial.coefficient = 1;
+                            state = _inPolynomialLeft;
+                        } else {
+                            parameter->type = PseudoSelector::ParameterType::IDENT;
+                            state = _inIdent;
+                            parameter->pString = token->data;
+                        }
                     } else if (token->type == STRING) {
                         parameter->type = PseudoSelector::ParameterType::STRING;
                         state = _inString;
@@ -379,6 +385,21 @@ operatorStack.pop();
                         break;
                     } else if (token->type == RIGHTBRACKET) {
                         CleanRetAndStopLoop;
+                    } else if (token->type == PLUS || token->type == MINUS) {
+                        Lex::CSSToken* t = m_lexer->GetToken();
+                        int sign = token->type == PLUS ? 1 : -1;
+                        if (t->type == NUMBER) {
+                            parameter->type = PseudoSelector::ParameterType::NUMBER;
+                            parameter->pNumber = StringUtil::str2int(t->data) * sign;
+                            state = _inNumber;
+                        } else if (t->type == IDENT && (t->data == "n" || t->data == "N")) {
+                            parameter->type = PseudoSelector::ParameterType::POLYNOMIAL;
+                            parameter->polynomial.coefficient = sign;
+                            state = _inPolynomialLeft;
+                        } else {
+                            CleanRetAndStopLoop;
+                            state = _error;
+                        }
                     } else {
                         CleanRetAndStopLoop;
                         state = _error;
