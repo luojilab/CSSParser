@@ -379,7 +379,9 @@ operatorStack.pop();
                     } else if (token->type == STRING) {
                         parameter->type = PseudoSelector::ParameterType::STRING;
                         state = _inString;
-                        parameter->pString = StringUtil::DeleteCharacter(token->data, '\"');
+                        token->data.erase(token->data.begin());
+                        token->data.erase(token->data.end() - 1);
+                        parameter->pString = token->data;
                     } else if (token->type == WS) {
                         state = _start;
                         break;

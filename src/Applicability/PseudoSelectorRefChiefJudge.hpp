@@ -27,6 +27,10 @@ namespace future {
         static void traverseElementNodeSiblings(GumboNode *node, traverseAction ac, void *userData);
         
         static int indexOfSiblings(GumboNode* node);
+        static int indexEqualTypeOfSiblings(GumboNode* node);
+        
+        static int lastIndexOfSiblings(GumboNode* node);
+        static int lastIndexEqualTypeOfSiblings(GumboNode* node);
         
         static bool indexAdaptToPoly(PseudoSelector::Parameter* parameter, int idx);
         
