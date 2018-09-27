@@ -9,14 +9,28 @@
 #ifndef PseudoSelectorRefChiefJudge_hpp
 #define PseudoSelectorRefChiefJudge_hpp
 
+#include <map>
 #include <stdio.h>
 #include "gumbo.h"
+#include "PseudoSelector.hpp"
 
 namespace future {
     class PseudoSelector;
     class PseudoSelectorRefChiefJudge {
     public:
         static bool nodeAdaptToPseudo(GumboNode *, PseudoSelector*);
+    private:
+        typedef void(*traverseAction)(GumboNode* node, bool& stop, void* userData);
+    private:
+        static std::map<std::string, bool>& getDynamicPseudoClassMap();
+        
+        static void traverseElementNodeSiblings(GumboNode *node, traverseAction ac, void *userData);
+        
+        static int indexOfSiblings(GumboNode* node);
+        
+        static bool indexAdaptToPoly(PseudoSelector::Parameter* parameter, int idx);
+        
+        static bool formulaHaveIntergerSolution(PseudoSelector::Parameter* parameter, int idx);
     };
 }
 

@@ -8,6 +8,7 @@
 #ifndef STRINGUTIL_H_
 #define STRINGUTIL_H_
 #include <string>
+#include <list>
 
 namespace future {
 

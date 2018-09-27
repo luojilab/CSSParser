@@ -17,7 +17,7 @@
 namespace future {
     class PseudoSelector: public Selector {
     public:
-        enum class ParameterType {
+        enum ParameterType {
             STRING,
             NUMBER,
             POLYNOMIAL,
