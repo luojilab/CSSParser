@@ -1,6 +1,6 @@
 # DDCSSParser - A C++ CSS Parser
 
-[![LISCENSE](https://camo.githubusercontent.com/99ff4b220c782b6a79fb75b9020a3f610ce0c55f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d417061636865253230322e302d6f72616e67652e737667)](./LICENSE)
+[![LISCENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](./LICENSE)
 
 [English document](./README-EN.md)
 
