@@ -20,7 +20,7 @@ DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a s
 - `./autogen.sh`
 - `./configure`
 - `make`
-- `./example`
+- `./example fullpath/to/htmlfile fullpath/to/cssfile`
 
 ## Feature
 

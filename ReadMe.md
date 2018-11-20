@@ -20,7 +20,7 @@ DDCSSParser是一个C++实现的css解析器。最终会生成一系列的select
 * `./autogen.sh`
 * `./configure`
 * `make`
-* `./example`
+* `./example fullpath/to/htmlfile fullpath/to/cssfile`
 
 ## 特性
 
