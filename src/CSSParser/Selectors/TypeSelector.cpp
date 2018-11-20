@@ -19,4 +19,9 @@ namespace future {
 	{
 		return 1;
 	}
+    
+    std::string TypeSelector::description()
+    {
+        return "TypeSelector: (type name is " + m_typeName + ")\n";
+    }
 }

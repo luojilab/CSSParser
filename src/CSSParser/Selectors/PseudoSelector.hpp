@@ -13,7 +13,6 @@
 #include <iostream>
 #include "Selector.hpp"
 
-// TODO not finish
 namespace future {
     class PseudoSelector: public Selector {
     public:
@@ -53,18 +52,20 @@ namespace future {
             m_data = data;
             m_parameter = NULL;
         }
-        
-        ~PseudoSelector();
-        
+
+        virtual ~PseudoSelector();
+
         bool isBaseSelector();
-        
+
         int weight();
-        
+
         void setParameter(Parameter *);
-        
+
         std::string getPseudoData();
-        
+
         Parameter* getParameter();
+        
+        virtual std::string description();
     private:
         std::string m_data;
         Parameter* m_parameter;

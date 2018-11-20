@@ -59,6 +59,8 @@ namespace future {
 		{
         	return m_normalInhericalList;
 		}
+        
+        virtual std::string description();
 
     private:
         std::list<Selector *> m_instanceSiblingList;

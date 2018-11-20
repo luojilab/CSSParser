@@ -26,6 +26,7 @@ namespace future {
         }
         bool isBaseSelector();
         int weight();
+        virtual std::string description();
     private:
         std::string m_id;
     };

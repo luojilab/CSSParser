@@ -10,21 +10,24 @@
 #define ContainerUtil_hpp
 
 #include <stdio.h>
+#include <set>
 
 namespace future {
-#define CleanContainer(c) c.unique(); _CleanContainer(c); c.clear();
     /*
      * Container type must be STL Sequence
      * because of the unique and forword iterator conception
      */
-    template<class T>
-    void _CleanContainer(const T& container)
+    template<class VT, class T>
+    void CleanContainer(T& container)
     {
-        typename T::const_iterator it = container.begin();
-        typename T::const_iterator end = container.end();
-        while (it != end) {
+        std::set<VT> nonrepeatContainer(container.begin(), container.end());
+        auto it = nonrepeatContainer.begin();
+        auto end = nonrepeatContainer.end();
+        while(it != end) {
             delete *it++;
         }
+        nonrepeatContainer.clear();
+        container.clear();
     }
 }
 

@@ -20,7 +20,7 @@ namespace future {
     
     GroupSelector::~GroupSelector()
     {
-        CleanContainer(m_selectors);
+        CleanContainer<Selector *>(m_selectors);
     }
 
     bool GroupSelector::isBaseSelector()
@@ -37,5 +37,15 @@ namespace future {
     		w += (*it++)->weight();
     	}
     	return w;
+    }
+    
+    std::string GroupSelector::description()
+    {
+        std::string desc = "Group Selector:[\n";
+        for (Selector* s: m_selectors) {
+            desc += s->description() + ",\n";
+        }
+        desc += "]\n";
+        return desc;
     }
 }

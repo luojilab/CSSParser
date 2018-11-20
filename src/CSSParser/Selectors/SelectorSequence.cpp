@@ -19,7 +19,7 @@ namespace future {
     
     SequenceSelector::~SequenceSelector()
     {
-        CleanContainer(m_selectors);
+        CleanContainer<Selector *>(m_selectors);
     }
 
     bool SequenceSelector::isBaseSelector()
@@ -36,5 +36,15 @@ namespace future {
     		w += (*it++)->weight();
     	}
     	return w;
+    }
+    
+    std::string SequenceSelector::description()
+    {
+        std::string desc = "SequenceSelector:[\n";
+        for(Selector *s : m_selectors) {
+            desc += s->description() + "\n";
+        }
+        desc += "]\n";
+        return desc;
     }
 }

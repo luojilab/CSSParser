@@ -19,4 +19,9 @@ namespace future {
 	{
 		return 10;
 	}
+    
+    std::string ClassSelector::description()
+    {
+        return "Class Selector (Class name is \"" + m_class + "\")";
+    }
 }

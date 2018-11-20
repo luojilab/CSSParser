@@ -19,4 +19,9 @@ namespace future {
 	{
 		return 0;
 	}
+    
+    std::string UniversalSelector::description()
+    {
+        return "UniversalSelector";
+    }
 }

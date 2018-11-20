@@ -19,4 +19,9 @@ namespace future {
 	{
 		return 100;
 	}
+    
+    std::string IdSelector::description()
+    {
+        return "IdSelector (id is " + m_id + ")\n";
+    }
 }

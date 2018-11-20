@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <list>
+#include <set>
 #include "CSSLexStatus.h"
 
 namespace future {
@@ -29,15 +30,15 @@ namespace future {
         };
     public:
         Lex();
-        virtual ~Lex();
+        ~Lex();
         CSSToken*       GetToken();
         void            CleanResource();
         void            SetBufferSource(const std::string& fileName);
         void            SetBufferString(const std::string& bufferString);
     private:
         CSSToken*   GetIdentToken();
-        CSSToken*   GetTextToken(char stringType);
         CSSToken*   GetNumberToken();
+        CSSToken*   GetTextToken(char stringType);
         bool        isDigitalCharacter(char);
         bool        isLetter(char);
         bool        isHexCharacter(char);
@@ -49,7 +50,7 @@ namespace future {
         size_t                  m_bufferSize;
         size_t                  m_firstPos;
         size_t                  m_forwardPos;
-        std::list<CSSToken *>   m_tokenCache;
+        std::set<CSSToken *>   m_tokenCache;
     };
 }
 #endif /* CSSLex_hpp */

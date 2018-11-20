@@ -13,10 +13,10 @@ namespace future {
     
     CombineSelector::~CombineSelector()
     {
-        CleanContainer(m_normalSiblingList);
-        CleanContainer(m_instanceSiblingList);
-        CleanContainer(m_normalInhericalList);
-        CleanContainer(m_instanceSiblingList);
+        CleanContainer<Selector *>(m_normalSiblingList);
+        CleanContainer<Selector *>(m_instanceSiblingList);
+        CleanContainer<Selector *>(m_normalInhericalList);
+        CleanContainer<Selector *>(m_instanceSiblingList);
     }
     
     void CombineSelector::initialNormalSiblingList(future::Selector *head, future::Selector *sibling)
@@ -27,7 +27,7 @@ namespace future {
         if (!head || !sibling) {
             return;
         }
-        CleanContainer(m_normalSiblingList);
+        CleanContainer<Selector *>(m_normalSiblingList);
         m_normalSiblingList.clear();
         m_normalSiblingList.push_back(head);
         m_normalSiblingList.push_back(sibling);
@@ -42,7 +42,7 @@ namespace future {
         if (!head || !sibling) {
             return;
         }
-        CleanContainer(m_instanceSiblingList);
+        CleanContainer<Selector *>(m_instanceSiblingList);
         m_instanceSiblingList.clear();
         m_instanceSiblingList.push_back(head);
         m_instanceSiblingList.push_back(sibling);
@@ -57,7 +57,7 @@ namespace future {
         if (!root || !child) {
             return;
         }
-        CleanContainer(m_normalInhericalList);
+        CleanContainer<Selector *>(m_normalInhericalList);
         m_normalInhericalList.clear();
         m_normalInhericalList.push_back(root);
         m_normalInhericalList.push_back(child);
@@ -72,7 +72,7 @@ namespace future {
         if (!root || !child) {
             return;
         }
-        CleanContainer(m_instanceInhericalList);
+        CleanContainer<Selector *>(m_instanceInhericalList);
         m_instanceInhericalList.clear();
         m_instanceInhericalList.push_back(root);
         m_instanceInhericalList.push_back(child);
@@ -169,6 +169,24 @@ namespace future {
     CombineSelector::CombineType CombineSelector::getCombineType()
     {
         return m_combineType;
+    }
+    
+    std::string CombineSelector::description()
+    {
+        std::string relation = "no relation";
+        std::string desc = "CombineSelector: {\n";
+        if (!m_instanceSiblingList.empty()) {
+            relation = "instance sibling";
+        } else if (!m_normalSiblingList.empty()) {
+            relation = "normal sibling";
+        } else if (!m_normalInhericalList.empty()) {
+            relation = "normal inherical";
+        } else if (!m_instanceInhericalList.empty()) {
+            relation = "instance inherical";
+        }
+        desc += "(" + getBefore()->description() + ")" + relation +
+        + "(" + getAfter()->description() + ")\n}";
+        return desc;
     }
 
 } // namespace future

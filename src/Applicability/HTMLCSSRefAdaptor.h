@@ -25,7 +25,7 @@ public:
      * @param potentialSize the size of nodes array
      * @note the nodes can be changed after the comparing.
      */
-	static bool nodeAdaptToSelector(GumboArrayPtr nodes, Selector* selector, int *potentialSize = 0);
+	static bool nodeAdaptToSelector(GumboArrayPtr nodes, Selector* selector, int *potentialSize);
     
     /**
      * Clean all resource after the compare

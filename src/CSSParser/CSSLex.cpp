@@ -72,7 +72,7 @@ namespace future {
         m_firstPos = 0;
         m_forwardPos = 0;
     }
-    
+
     Lex::CSSToken* Lex::GetTextToken(char stringType)
     {
         enum {
@@ -82,7 +82,7 @@ namespace future {
         };
         char status = _START;
         CSSToken* token = new CSSToken;
-        m_tokenCache.push_back(token);
+        m_tokenCache.insert(token);
         m_forwardPos = m_firstPos;
         if (m_forwardPos >= m_bufferSize) {
             token->type = END;
@@ -143,7 +143,7 @@ namespace future {
     Lex::CSSToken* Lex::GetIdentToken()
     {
         CSSToken* token = new CSSToken;
-        m_tokenCache.push_back(token);
+        m_tokenCache.insert(token);
         token->type = IDENT;
         CSSDFAStatus STATUS = Start;
         bool stopLoop = false;
@@ -315,21 +315,22 @@ namespace future {
             }
             c = NextChar(m_buffer);
         }
-        
+
         if (data.size() == 0) {
             return NULL;
         } else {
             CSSToken* token = new CSSToken;
+            m_tokenCache.insert(token);
             token->type = NUMBER;
             token->data = data;
             return token;
         }
     }
-    
+
     Lex::CSSToken* Lex::GetToken()
     {
         CSSToken* token = new CSSToken;
-        m_tokenCache.push_back(token);
+        m_tokenCache.insert(token);
         token->type = IDENT;
         m_firstPos = m_forwardPos;
         bool stopLoop = false;
@@ -353,7 +354,6 @@ namespace future {
                             } else {
                                 STATUS = LexError;
                             }
-                            delete identToken;
                             break;
                         }
                         case '#': {
@@ -365,7 +365,6 @@ namespace future {
                             } else {
                                 STATUS = LexError;
                             }
-                            delete identToken;
                             break;
                         }
                         case '~': {
@@ -516,7 +515,6 @@ namespace future {
                                 }
                             }
                             stopLoop = true;
-                            delete idToken;
                             break;
                         }
                     }
@@ -535,7 +533,9 @@ namespace future {
                         STATUS = greater;
                     } else  if (c == TIDLE_SIGN) {
                         STATUS = tidle;
-                    } else {
+                    } else if ( c == '\0') {
+                    	  STATUS = end;
+                    } else  {
                         --m_forwardPos;
                         STATUS = Ws;
                     }
@@ -601,11 +601,12 @@ namespace future {
                     } else {
                         STATUS = LexError;
                     }
-                    delete numberToken;
                     break;
                 }
                     
-                default:
+                default: {
+                	stopLoop = true;
+                }
                     break;
             }
             bool resetStatus = true;
@@ -801,10 +802,9 @@ namespace future {
 
     void Lex::CleanResource()
     {
+        CleanContainer<CSSToken *>(m_tokenCache);
         delete [] m_buffer;
         m_buffer = 0;
-        std::list<CSSToken *>& ref = m_tokenCache;
-        CleanContainer(ref);
     }
     
     inline bool Lex::isDigitalCharacter(char c) {

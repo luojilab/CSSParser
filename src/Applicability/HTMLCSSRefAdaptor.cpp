@@ -506,7 +506,8 @@ namespace future {
     bool HTMLCSSRefAdaptor::nodeAdaptToSequenceSelector(GumboNode ***nodePtr, SequenceSelector* selector, int *potentialSize)
     {
         bool ret = true;
-        GumboNode* nodesBackup[*potentialSize];
+        const int size = *potentialSize;
+        GumboNode* nodesBackup[size];
         BackupNodes(nodesBackup, *nodePtr, *potentialSize);
         int loopSize = *potentialSize;
         std::list<GumboNode *>potentialNextNodes;
@@ -516,7 +517,9 @@ namespace future {
             std::list<Selector *>::iterator end = ss.end();
             while(it != end) {
                 GumboArray elementA = nodesBackup + i;
-                ret = nodeAdaptToSelector(&elementA, *it++) && ret;
+                int *temp = new int(1);
+                ret = nodeAdaptToSelector(&elementA, *it++, temp) && ret;
+                delete temp;
                 if (!ret) {
                     continue;
                 }
@@ -543,7 +546,8 @@ namespace future {
             std::list<Selector *>::iterator end = ss.end();
             while(it != end) {
                 GumboArray elementA = nodesBackup + i;
-                ret = nodeAdaptToSelector(&elementA, *it++) || ret;
+                int *temp = new int(1);
+                ret = nodeAdaptToSelector(&elementA, *it++, temp) || ret;
             }
             if (ret) {
                 potentialNextNodes.push_back(nodesBackup[i]);
@@ -598,7 +602,8 @@ namespace future {
                                 continue;
                             }
                             GumboArray elementB = &sibling;
-                            beforeMatch = nodeAdaptToSelector(&elementB, before) || beforeMatch;
+                            int *temp = new int(1);
+                            beforeMatch = nodeAdaptToSelector(&elementB, before, temp) || beforeMatch;
                             if (beforeMatch) {
                                 potentialNextNodes.push_back(sibling);
                             }
@@ -642,7 +647,8 @@ namespace future {
                             GumboNode* sibling = (GumboNode *)children.data[k];
                             if (sibling == node && lastElementNode) {
                                 GumboArray elementB = &lastElementNode;
-                                beforeMatch = nodeAdaptToSelector(&elementB, before) || beforeMatch;
+                                int *temp = new int(1);
+                                beforeMatch = nodeAdaptToSelector(&elementB, before, temp) || beforeMatch;
                                 if (beforeMatch) {
                                     potentialNextNodes.push_back(lastElementNode);
                                 }
@@ -682,7 +688,8 @@ namespace future {
                     for (int j = 0; j < innerSize; j++) {
                         parent = beforeNodes[j]->parent;
                         GumboArray elementB = &parent;
-                        beforeMatch = nodeAdaptToSelector(&elementB, before);
+                        int *temp = new int(1);
+                        beforeMatch = nodeAdaptToSelector(&elementB, before, temp);
                         if (beforeMatch) {
                             potentialNextNodes.push_back(parent);
                         }
@@ -713,7 +720,8 @@ namespace future {
                         GumboNode* parent = beforeNodes[j]->parent;
                         while(parent) {
                             GumboArray elementB = &parent;
-                            beforeMatch = nodeAdaptToSelector(&elementB, before);
+                            int *temp = new int(1);
+                            beforeMatch = nodeAdaptToSelector(&elementB, before, temp);
                             if (beforeMatch) {
                                 potentialNextNodes.push_back(parent);
                             }
