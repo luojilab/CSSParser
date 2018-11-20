@@ -1,4 +1,4 @@
-# DDCSSParser - A C++ CSS Parser
+# DDCSSParser - a C++ CSS Parser
 
 [![LISCENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](./LICENSE.md)
 
@@ -22,7 +22,7 @@ DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a s
 - `make`
 - `./example fullpath/to/htmlfile fullpath/to/cssfile`
 
-## Feature
+## Features
 
 #### Supported CSS Selector:
 

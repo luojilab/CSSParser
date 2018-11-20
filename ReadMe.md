@@ -1,4 +1,4 @@
-# DDCSSParser - A C++ CSS Parser
+# DDCSSParser - C++的CSS解析器
 
 [![LISCENSE](https://img.shields.io/packagist/l/doctrine/orm.svg)](./LICENSE.md)
 
