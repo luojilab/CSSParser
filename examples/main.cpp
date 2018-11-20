@@ -17,23 +17,50 @@ void Applicability(GumboNode *root, future::Selector* selector);
 void AllNodesApplyToSelector(GumboNode *root, future::Selector* selector, std::list<GumboNode *>&list);
 
 int main(int argc, const char * argv[]) {
-    const char* htmlPath = "/Path/To/HTMLFile";
-    const char* cssPath = "/Path/To/CSSFile";
+    if (argc < 3) {
+        printf("Please enter html path and css path\n");
+        return 0;
+    }
+    const char* htmlPath = argv[1];
+    const char* cssPath = argv[2];
+    if (!strlen(htmlPath)) {
+        printf("HTML path is empty\n");
+        return 0;
+    }
+    if (!strlen(cssPath)) {
+        printf("css path is empty\n");
+        return 0;
+    }
+    
     FILE *f = fopen(htmlPath, "r");
+    if (!f) { printf("HTML file open failed\n"); return 0;}
     fseek(f, 0, SEEK_END);
     size_t size = ftell(f);
+    if (size == 0) { printf("HTML file is empty\n"); return 0; }
     fseek(f, 0, SEEK_SET);
-    char* ptr = new char[size];
+    char* ptr = new char[size + 1];
+    memset(ptr, 0, size + 1);
     fread((void *)ptr, size, 1, f);
     fclose(f);
     
     future::GumboInterface gi(ptr, "2");
     future::CSSParser* parser = new future::CSSParser;
     parser->parseByFile(cssPath);
-    std::list<future::Selector *>selectors = parser->getSelectors();
+    std::set<future::Selector *>selectors = parser->getSelectors();
+    
+    printf("********** All Keywords **********\n");
+    for(future::KeywordItem* keyword : parser->getKeywords()) {
+        printf("%s\n", keyword->getName().c_str());
+    }
+    // Print all selectors
+    printf("\n\n********** All Selectors **********\n");
+    for(future::Selector *s : selectors) {
+        printf("%s\n", s->description().c_str());
+    }
+    printf("\n");
     // Demo1:
     // 检测html中的node，是否适用于一个css的selector
-    // Check whether a css selector can apply to a html node
+    // Check whether a css selector canapply to a html node
     for (future::Selector *s : selectors) {
         // Tranvers DOM tree
         Applicability(gi.get_root_node(), s);
@@ -60,10 +87,13 @@ void Applicability(GumboNode *root, future::Selector* selector)
         }
         const char* name = HTMLTagNames[root->v.element.tag];
         future::HTMLCSSRefAdaptor::GumboArray nodesArray = &root;
-        printf("%s match selector %d line: %d\n",
+        int *temp = new int(1);
+        printf("%s match selector %s line: %d\n",
                name,
-               future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector),
+               future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector, temp) ? "YES" : "FALSE",
                root->v.element.start_pos.line);
+        delete temp;
+        
     }
     future::HTMLCSSRefAdaptor::CleanResource();
 }
@@ -77,7 +107,8 @@ void AllNodesApplyToSelector(GumboNode *root, future::Selector* selector, std::l
             AllNodesApplyToSelector(child, selector, list);
         }
         future::HTMLCSSRefAdaptor::GumboArray nodesArray = &root;
-        if (future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector)) {
+        int *temp = new int(1);
+        if (future::HTMLCSSRefAdaptor::nodeAdaptToSelector(&nodesArray, selector, temp)) {
             list.push_back(root);
         }
     }
