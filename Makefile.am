@@ -15,6 +15,7 @@ libcssparser_a_SOURCES = \
 												 src/CSSParser/Selectors/Selector.cpp\
 												 src/CSSParser/Selectors/IdSelector.cpp\
 												 src/Applicability/HTMLCSSRefAdaptor.cpp\
+                                                 src/Applicability/PseudoSelectorRefChiefJudge.cpp\
 												 src/Vendor/gumbo/string_buffer.c\
 												 src/Vendor/gumbo/util.c\
 												 src/Vendor/gumbo/vector.c\
