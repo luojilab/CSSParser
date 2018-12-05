@@ -657,7 +657,7 @@ namespace future {
                 }
                 case end: {
                     token->type = END;
-                    resetStatus = false;
+                    resetStatus = true;
                     break;
                 }
                 case comma: {
