@@ -41,8 +41,11 @@ namespace future {
     std::string SequenceSelector::description()
     {
         std::string desc = "SequenceSelector:[\n";
-        for(Selector *s : m_selectors) {
-            desc += s->description() + "\n";
+        auto it = m_selectors.begin();
+        auto end = m_selectors.end();
+        while (it != end) {
+            desc += (*it)->description() + "\n";
+            ++it;
         }
         desc += "]\n";
         return desc;
