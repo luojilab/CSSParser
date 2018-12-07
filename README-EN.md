@@ -8,6 +8,12 @@
 
 DDCSSParser is a CSS parser implemented by c++. By this parser, user can get a series of CSS model and check whether a CSS model (a CSS rule) can be applied to an HTML DOM node.
 
+
+
+<img id="sc0" src = "./projectStruct-EN.svg"/>
+
+
+
 ## Installation
 
 ##### Using Code
